@@ -2,12 +2,14 @@ import Info from './pages/info/info';
 import Home from './pages/home/home';
 import Work from './pages/work/work';
 import Other from './pages/other/other';
+import Nav from './components/nav/nav';
 
 import './App.css';
 
 function App() {
   return (
     <div id='main' className='main'>
+      <Nav />
 
       <div className='bg'>
       </div>
