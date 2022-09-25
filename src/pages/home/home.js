@@ -1,15 +1,28 @@
+import React from 'react';
+import { useEffect } from 'react'
 import './home.css'
 
 function Home() {
+
+    useEffect(() => {
+        var arrow = document.getElementById('arrow');
+        var main = document.getElementById('main');
+        main.addEventListener('scroll', () => {
+            arrow.style.transform = 'translateY(-' + main.scrollTop * (main.scrollTop * 0.01) + 'px)';
+            arrow.style.opacity = 1 - (main.scrollTop / 200)
+        })
+    }, []);
+
     return (
-        <div className='home-page'>
+        <div className='home-page page'>
 
             {/* <div className='bg-dark'>
                 <img className='topo' src={'./topo.png'} />
             </div> */}
 
-
+            {/* <div className='header-container' style={ { backgroundImage: 'diag-pattern.jpg' }}> */}
             <div className='header-container'>
+                <img className='lines' src={'dashes.svg'}></img>
                 <div className='name'>
                     <span className='header'>zing</span>
                     <span className='header-sec'>-rsa</span>
@@ -32,11 +45,12 @@ function Home() {
             </div>
 
             <div className='img-container'>
-                <img className='zing-head' src={'./zing-long.jpg'} />
+                <img className='zing-head' src={'zing-long.jpg'} />
+                {/* <img className='zing-head' src={'zing-long.jpg'} /> */}
             </div>
 
-            <div className='srcoll'>
-                <i class="fa-solid fa-xl fa-chevron-down"></i>
+            <div id='arrow' className='scroll'>
+                <i className="fa-solid fa-xl fa-chevron-down"></i>
             </div>
         </div>
 
