@@ -5,8 +5,13 @@ import Other from './pages/other/other';
 import Nav from './components/nav/nav';
 
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+  }, []);
+
   return (
     <div id='main' className='main'>
       <Nav />

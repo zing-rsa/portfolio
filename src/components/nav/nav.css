@@ -7,24 +7,32 @@
     top: 0;
     left: 0;
     z-index: 10;
+
+    display: flex;
     
     transition: all 1s;
     
     /* background-color: green; */
 }
 
+.nav-container a {
+    text-decoration: none;
+    color:inherit;
+} 
+
 .nav-list {
-    width: 60vw;
+    width: 40vw;
     height: 100%;
     margin: 0px;
+    margin-left:20vw;
     padding: 0px;
 
     display: flex;
     flex-direction: row;
 
     justify-content: flex-end;
+    /* background-color: aqua; */
 
-    /* background-color:purple; */
 }
 
 .nav-list-item {
@@ -36,9 +44,10 @@
     text-align: center;
 
     z-index: 10;
+
 }
 
-.small {
+.small {    
     line-height: 4vh;
     height: 4vh;
 }
@@ -50,10 +59,64 @@
     left: 0px;
     top: 0px;
     position: absolute;
+    display: flex;
 
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
 
     transition: transform 500ms ease-in-out;
+
+    z-index: 5;
+}
+
+.back-left {
+    width: 60vw;
+    height: 100%;
+    background-color: white
+}
+
+.back-right {
+    width: 40vw;
+    height: 100%;
+    background-color: rgb(35, 36, 39);
+}
+
+.nav-name {
+    width: 20vw;
+    font-size: 30px;
+    font-family: 'GT-Super', sans-serif;
+    font-weight: 400;
+    text-align: center;
+    z-index: 10;
+    position: absolute;
+    /* background-color:purple; */
+}
+
+.nav-socials {
+    /* background-color: red; */
+    height: 100%;
+    width: 40vw;
+
+    display: flex;
+    justify-content: flex-end  ;
+
+    
+
+    color: white;
+    z-index: 10;
+    
+}
+
+.nav-social {
+    height: 100%;
+    width: 50px;
+    font-size: 20px;
+
+    margin: 0px 20px;
+
+    /* background-color: green; */
+    text-align: center; 
+
+
 }
 
 .show {

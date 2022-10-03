@@ -2,7 +2,7 @@ import './other.css'
 
 function Other() {
     return (
-        <div className='page other-page'>
+        <div id='other' className='page other-page'>
             other
         </div>
     )

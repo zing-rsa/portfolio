@@ -13,7 +13,7 @@ function Info({ pos }) {
         var mid3 = document.getElementById('grid-mid-3');
         var bottombox = document.getElementById('grid-bottom');
 
-        var backtext = document.getElementById('back-text');
+        var backtext = document.getElementById('intro-back-text');
 
         const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
         var targetCentPos = pos * vh - (0.5 * vh);
@@ -36,9 +36,9 @@ function Info({ pos }) {
     }, []);
 
     return (
-        <div className='page info-page'>
+        <div id='intro' className='page info-page'>
             <div className='back-text-container'>
-                <div id='back-text'>INTRO</div>
+                <div id='intro-back-text'>INTRO</div>
             </div>
             <div className='grid-container'>
                 <div id='grid-top' className='grid-card grid-top'>

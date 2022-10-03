@@ -91,16 +91,14 @@
   width: 100vw;
   text-align: center;
   bottom: 0px;
+  overflow: hidden;
 }
 
 .scroll i {
   line-height:50px;
 }
 
-
 .roller {
-  /* height: 4.125rem;
-  line-height: 4rem; */
   height: 2rem;
   line-height: 2rem;
   position: relative;

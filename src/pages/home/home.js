@@ -14,19 +14,15 @@ function Home() {
     }, []);
 
     return (
-        <div className='home-page page'>
-
-            {/* <div className='bg-dark'>
-                <img className='topo' src={'./topo.png'} />
-            </div> */}
-
-            {/* <div className='header-container' style={ { backgroundImage: 'diag-pattern.jpg' }}> */}
+        <div id='home' className='home-page page'>
             <div className='header-container'>
+
                 <img className='lines' src={'dashes.svg'}></img>
                 <div className='name'>
                     <span className='header'>zing</span>
                     <span className='header-sec'>-rsa</span>
                 </div>
+
                 <div className='profession'>
                     <div>Full stack</div>
 

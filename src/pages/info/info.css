@@ -15,6 +15,7 @@
   color: rgba(0,0,0,0.1);
 
   overflow:hidden;
+  z-index: -10;
 }
 
 .grid-container {
@@ -29,10 +30,10 @@
 
 .grid-card {  
   background-color: rgb(24, 25, 27);
-  border-radius: 20px;
+  border-radius: 5px;
   box-shadow: rgba(20, 20, 22, 0.3) 0px 7px 29px 0px;
 }
-
+ 
 .grid-top {
   grid-column: 1 / 4;
   grid-row: 1 / 3;
