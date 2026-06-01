@@ -9,7 +9,7 @@
  * `GITHUB_TOKEN` env var.
  */
 
-export type SocialKey = "github" | "x" | "linkedin" | "discord" | "email";
+export type SocialKey = "github" | "x" | "discord" | "email";
 
 export interface SocialLink {
   key: SocialKey;
@@ -41,15 +41,14 @@ export const siteConfig: SiteConfig = {
   heading: "hello, i'm zing",
   intro:
     "I'm a passionate developer and outdoor activity enjoyer. I develop software in payments and corporate finance and have keen interests in web development and blockchain.",
-  location: "Earth",
-  timezone: "UTC",
+  location: "Cape Town, South Africa",
+  timezone: "SAST",
   github: {
     username: "zing-rsa",
   },
   socials: [
     { key: "github", label: "GitHub", href: "https://github.com/zing-rsa" },
-    { key: "x", label: "X", href: "https://x.com/zing" },
-    { key: "linkedin", label: "LinkedIn", href: "https://linkedin.com/in/zing" },
+    { key: "x", label: "X", href: "https://x.com/zing_rsa" },
     { key: "discord", label: "Discord", href: "https://discord.com/users/zing" },
     { key: "email", label: "Email", href: "mailto:hello@example.com" },
   ],

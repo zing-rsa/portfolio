@@ -40,7 +40,6 @@ const EMAIL_PATH =
 const SOCIAL_SLUGS: Record<SocialKey, string | null> = {
   github: "github",
   x: "x",
-  linkedin: "linkedin",
   discord: "discord",
   email: null, // custom path below
 };

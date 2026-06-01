@@ -14,13 +14,20 @@ export function LocalTime({ timezone }: LocalTimeProps) {
   const [now, setNow] = useState<string | null>(null);
 
   useEffect(() => {
-    const fmt = new Intl.DateTimeFormat("en-GB", {
+    // Fall back to the browser's local zone if `timezone` isn't a valid IANA
+    // name (e.g. an abbreviation like "SAST"), so the clock never throws.
+    let fmt: Intl.DateTimeFormat;
+    const opts: Intl.DateTimeFormatOptions = {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
       hour12: false,
-      timeZone: timezone,
-    });
+    };
+    try {
+      fmt = new Intl.DateTimeFormat("en-GB", { ...opts, timeZone: timezone });
+    } catch {
+      fmt = new Intl.DateTimeFormat("en-GB", opts);
+    }
 
     const tick = () => setNow(fmt.format(new Date()));
     tick();

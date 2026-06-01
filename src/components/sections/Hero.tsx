@@ -20,10 +20,13 @@ export function Hero() {
 
       <TypedHeading
         text={siteConfig.heading}
-        className="text-3xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+        // Pause once the greeting word ("hello,") is on screen, then continue.
+        pauseAfter={siteConfig.heading.split(/\s/)[0]?.length ?? 0}
+        pauseMs={650}
+        className="text-lg font-bold leading-tight sm:text-xl"
       />
 
-      <p className="mt-8 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
+      <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
         {siteConfig.intro}
       </p>
 

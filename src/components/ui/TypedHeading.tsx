@@ -8,6 +8,10 @@ interface TypedHeadingProps {
   className?: string;
   /** Milliseconds between characters. */
   speed?: number;
+  /** Insert a longer pause once this many characters have been typed. */
+  pauseAfter?: number;
+  /** Length of that pause, in ms. */
+  pauseMs?: number;
   as?: "h1" | "h2";
 }
 
@@ -20,6 +24,8 @@ export function TypedHeading({
   text,
   className,
   speed = 70,
+  pauseAfter,
+  pauseMs = 600,
   as = "h1",
 }: TypedHeadingProps) {
   const [count, setCount] = useState(0);
@@ -37,14 +43,21 @@ export function TypedHeading({
 
     setCount(0);
     let i = 0;
-    const id = window.setInterval(() => {
+    let timer: number;
+
+    // Self-scheduling so the delay before each character can vary — we hold a
+    // longer pause once `pauseAfter` characters are on screen.
+    const step = () => {
       i += 1;
       setCount(i);
-      if (i >= text.length) window.clearInterval(id);
-    }, speed);
+      if (i >= text.length) return;
+      const delay = i === pauseAfter ? pauseMs : speed;
+      timer = window.setTimeout(step, delay);
+    };
 
-    return () => window.clearInterval(id);
-  }, [text, speed]);
+    timer = window.setTimeout(step, speed);
+    return () => window.clearTimeout(timer);
+  }, [text, speed, pauseAfter, pauseMs]);
 
   const done = count >= text.length;
 
