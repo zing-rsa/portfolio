@@ -13,15 +13,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // `ink` = foreground/text, `paper` = background. Dark terminal theme:
+        // ink is a light ramp (brightest → dimmest), paper a dark ramp
+        // (base → slightly-lighter surfaces). Every component uses these tokens,
+        // so the whole site themes from here.
         ink: {
-          DEFAULT: "#0a0a0a",
-          muted: "#6b6b6b",
-          faint: "#a3a3a3",
+          DEFAULT: "#e8e8e8",
+          muted: "#8a8a8a",
+          faint: "#5a5a5a",
         },
         paper: {
-          DEFAULT: "#fafafa",
-          muted: "#e5e5e5",
-          faint: "#f0f0f0",
+          DEFAULT: "#0a0a0a",
+          faint: "#141414",
+          muted: "#1f1f1f",
         },
       },
       fontFamily: {

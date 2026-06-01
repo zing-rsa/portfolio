@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 @layer base {
@@ -15,7 +15,7 @@
     @apply bg-paper text-ink font-mono antialiased;
     /* Subtle terminal scanline texture — extremely faint, never flashy. */
     background-image: linear-gradient(
-      rgba(10, 10, 10, 0.015) 1px,
+      rgba(232, 232, 232, 0.02) 1px,
       transparent 1px
     );
     background-size: 100% 3px;
