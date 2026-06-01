@@ -1,11 +1,7 @@
 /**
- * GitHub stats fetcher (server-only).
- *
- * One GraphQL request gathers everything the stats section needs: profile
- * counts, the contribution calendar, pinned repos, a sample of starred repos,
- * and per-language byte totals. Cached for an hour via the fetch cache so the
- * page can be statically revalidated. Returns `null` when no token is
- * configured or the request fails, so the UI degrades gracefully.
+ * GitHub stats fetcher (server-only). One cached GraphQL request returns the
+ * profile counts, contribution calendar, pinned/starred repos and language
+ * totals; returns null (UI degrades) when there's no token or the request fails.
  */
 import { siteConfig } from "@/site.config";
 
@@ -137,7 +133,6 @@ export async function getGithubStats(): Promise<GithubStats | null> {
   const user = json.data?.user;
   if (!user) return null;
 
-  // Per-language byte totals across all owned repos.
   const langTotals = new Map<string, number>();
   let totalStars = 0;
   for (const repo of user.repositories.nodes) {
@@ -154,7 +149,6 @@ export async function getGithubStats(): Promise<GithubStats | null> {
     .sort((a, b) => b.bytes - a.bytes)
     .slice(0, 8);
 
-  // Calendar with monochrome intensity buckets.
   const weeks = user.contributionsCollection.contributionCalendar.weeks;
   const maxDay = Math.max(
     1,
@@ -195,7 +189,6 @@ export async function getGithubStats(): Promise<GithubStats | null> {
   };
 }
 
-// ---- GraphQL response shapes ----
 interface GithubRepo {
   name: string;
   nameWithOwner?: string;

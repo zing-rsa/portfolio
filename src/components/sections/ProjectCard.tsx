@@ -33,10 +33,8 @@ function TechBadges({ tech }: { tech: TimelineProject["technologies"] }) {
 }
 
 /**
- * A single timeline card. Professional cards lead with organization + role;
- * personal cards lead with an optional screenshot and external/repo links.
- * Purely presentational (no hooks), so it renders on the server for the initial
- * page and on the client for "Load more" results alike.
+ * A single timeline card: professional (organization + role) or personal
+ * (optional screenshot + external/repo links).
  */
 export function ProjectCard({ project }: { project: TimelineProject }) {
   const isPro = project.type === "professional";

@@ -27,10 +27,8 @@ export const projects = pgTable("projects", {
   id: uuid("id").primaryKey().defaultRandom(),
   type: projectType("type").notNull(),
 
-  // Shared fields.
   title: text("title").notNull(),
   description: text("description").notNull(),
-  // `date` so ordering is purely by calendar day; stored as ISO string.
   startDate: date("start_date").notNull(),
   endDate: date("end_date"),
   technologies: jsonb("technologies")
@@ -38,12 +36,10 @@ export const projects = pgTable("projects", {
     .notNull()
     .default([]),
 
-  // Professional-only.
   organization: text("organization"),
   organizationIcon: text("organization_icon"),
   role: text("role"),
 
-  // Personal-only.
   imageUrl: text("image_url"),
   link: text("link"),
   githubLink: text("github_link"),

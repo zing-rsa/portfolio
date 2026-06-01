@@ -42,7 +42,7 @@ const SOCIAL_SLUGS: Record<SocialKey, string | null> = {
   github: "github",
   x: "x",
   discord: "discord",
-  email: null, // custom path below
+  email: null,
 };
 
 /** Light tone used when a brand colour is too dark to read on the dark theme. */
@@ -116,7 +116,6 @@ function resolve(name: string): ResolvedIcon | null {
     }
     const aliased = bySlug.get(override.slug.toLowerCase());
     if (aliased) {
-      // Use the overridden colour as-is if given, else the brand colour.
       const color =
         "color" in override ? override.color : readableColor(aliased.hex);
       return { path: aliased.path, color };
@@ -143,11 +142,6 @@ export function getSocial(key: SocialKey): ResolvedIcon | null {
   return getIcon(SOCIAL_SLUGS[key]);
 }
 
-/**
- * Resolve a list of `{ name, icon }` technologies to a render-ready shape with
- * the SVG path + brand colour baked in. Used by server components and the
- * projects API so the client never needs simple-icons.
- */
 export interface TechIcon {
   name: string;
   path: string | null;
@@ -156,13 +150,7 @@ export interface TechIcon {
   color: string | null;
 }
 
-/**
- * Resolve a technology's `{ name, icon }` to a render-ready `{ path, color }`.
- * The slug (or name) is resolved via `getIcon`, which consults the code-defined
- * `iconOverrides` first and then simple-icons — the single source of truth for
- * what each slug looks like. Unknown slugs resolve to a null path (the `Icon`
- * component then shows its placeholder square).
- */
+/** Resolve a list of technologies to render-ready icons via `getIcon`. */
 export function resolveTechIcons(
   technologies: { name: string; icon?: string | null }[] | null | undefined,
 ): TechIcon[] {

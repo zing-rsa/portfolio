@@ -2,7 +2,6 @@ import { getGithubStats, type CalendarDay } from "@/lib/github/stats";
 import { getIconPath, getIcon } from "@/lib/icons";
 import { Section, Card, Icon, FadeIn, ScrollToEnd } from "@/components/ui";
 
-// Monochrome intensity ramp for the contribution calendar.
 const LEVEL_BG = [
   "bg-ink/[0.07]",
   "bg-ink/25",
@@ -27,8 +26,6 @@ function Stat({ label, value }: { label: string; value: number }) {
 function Calendar({ weeks }: { weeks: CalendarDay[][] }) {
   return (
     <div>
-      {/* Center the whole calendar (header, grid, legend) as one fit-content
-          block; capped at full width so it still scrolls on narrow screens. */}
       <div className="mx-auto w-fit max-w-full">
         <h3 className="mb-3 text-sm text-ink-muted">
           contribution graph · last year

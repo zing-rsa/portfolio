@@ -6,7 +6,7 @@ import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 
 export const SESSION_COOKIE = "portfolio_session";
 const ALG = "HS256";
-const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
+const MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
 function getSecret(): Uint8Array {
   const secret = process.env.SESSION_SECRET;
@@ -17,7 +17,8 @@ function getSecret(): Uint8Array {
 }
 
 export interface SessionPayload extends JWTPayload {
-  sub: string; // admin email
+  /** Admin email. */
+  sub: string;
 }
 
 export async function signSession(email: string): Promise<string> {

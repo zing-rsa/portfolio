@@ -42,7 +42,7 @@ const TECH_POOL = [
   { name: "Tailwind", icon: "tailwindcss" },
   { name: "GraphQL", icon: "graphql" },
   { name: "Solidity", icon: "solidity" },
-  { name: "C#", icon: "c#" }, // exercises the icon override
+  { name: "C#", icon: "c#" },
 ];
 
 function pad(n: number): string {
@@ -51,7 +51,7 @@ function pad(n: number): string {
 
 /** Build YYYY-MM-01 stepping `monthsBack` months before 2025-01. */
 function dateMonthsBack(monthsBack: number): string {
-  const total = 2025 * 12 + 0 - monthsBack; // base = 2025-01
+  const total = 2025 * 12 + 0 - monthsBack;
   const year = Math.floor(total / 12);
   const month = (total % 12) + 1;
   return `${year}-${pad(month)}-01`;
@@ -60,10 +60,8 @@ function dateMonthsBack(monthsBack: number): string {
 function buildProject(i: number): NewProject {
   const isPro = i % 2 === 0;
   const start = dateMonthsBack(i * 3);
-  // Newest few are ongoing; older ones get an end date ~6 months after start.
   const end = i < 2 ? null : dateMonthsBack(i * 3 - 6);
 
-  // 2–3 technologies, rotating through the pool by index.
   const techCount = 2 + (i % 2);
   const technologies = Array.from({ length: techCount }, (_, k) => TECH_POOL[(i * 2 + k) % TECH_POOL.length]);
 

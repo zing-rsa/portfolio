@@ -25,8 +25,6 @@ export async function POST(req: NextRequest) {
     .where(eq(adminUsers.email, email))
     .limit(1);
 
-  // Same response whether the user is missing or the password is wrong, so the
-  // endpoint doesn't leak which emails are registered.
   const ok = user ? await verifyPassword(password, user.passwordHash) : false;
   if (!ok) {
     return NextResponse.json(

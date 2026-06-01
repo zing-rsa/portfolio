@@ -19,16 +19,9 @@ interface IconProps extends IconData {
 }
 
 /**
- * Renders an icon. Three shapes, in priority order:
- *  - `svg`: arbitrary inner SVG markup (multiple paths/colours), rendered inside
- *    a sized wrapper using the icon's own viewBox.
- *  - `path`: a single SVG path, filled with `color` (or `currentColor`).
- *  - neither: a small bordered square placeholder.
- *
- * The `svg` markup comes only from code (`@/lib/icon-overrides.ts`), never user
- * input, so injecting it is as trusted as authoring JSX.
- *
- * Kept free of any simple-icons import so it is safe in client bundles.
+ * Renders an icon: arbitrary inner `svg` markup, a single `path`, or a
+ * placeholder square. The `svg` markup comes only from code (icon-overrides),
+ * never user input. No simple-icons import, so it is safe in client bundles.
  */
 export function Icon({
   icon,
@@ -55,8 +48,6 @@ export function Icon({
         viewBox={viewBox}
         width={size}
         height={size}
-        // Only force a fill when a colour is given; otherwise let the SVG's own
-        // fills/styles apply (e.g. a multi-colour logo).
         fill={color ?? undefined}
         className={clsx("inline-block align-middle", className)}
         dangerouslySetInnerHTML={{ __html: svg }}

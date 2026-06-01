@@ -2,17 +2,12 @@ import { getTimelinePage, PAGE_SIZE } from "@/lib/projects";
 import { Section } from "@/components/ui";
 import { TimelineClient } from "./TimelineClient";
 
-/**
- * Server component: fetches the first page of projects directly from the DB so
- * the initial 10 are server-rendered, then hands off to the client component
- * for "Load more" paging.
- */
+/** Server-renders the first page of projects, then hands off to the client for paging. */
 export async function Timeline() {
   let initial;
   try {
     initial = await getTimelinePage(0, PAGE_SIZE);
   } catch {
-    // DB unreachable — render an empty timeline rather than crashing the page.
     initial = { items: [], hasMore: false, total: 0 };
   }
 

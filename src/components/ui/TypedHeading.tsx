@@ -17,8 +17,7 @@ interface TypedHeadingProps {
 
 /**
  * Types `text` out character-by-character on mount with a blinking cursor.
- * Respects `prefers-reduced-motion`: reduced-motion users see the full string
- * immediately (cursor still blinks). This is animation #1 from the spec.
+ * Respects `prefers-reduced-motion` (full string shown immediately).
  */
 export function TypedHeading({
   text,
@@ -45,8 +44,6 @@ export function TypedHeading({
     let i = 0;
     let timer: number;
 
-    // Self-scheduling so the delay before each character can vary — we hold a
-    // longer pause once `pauseAfter` characters are on screen.
     const step = () => {
       i += 1;
       setCount(i);

@@ -31,7 +31,6 @@ function parseTechnologies(v: unknown): Technology[] {
 
     const tech: Technology = { name };
 
-    // Only a simple-icons slug; the glyph/colour is resolved in code.
     const icon = asOptionalString(t.icon);
     if (icon) tech.icon = icon;
 

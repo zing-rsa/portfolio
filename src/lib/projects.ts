@@ -22,11 +22,9 @@ export interface TimelineProject {
   startDate: string;
   endDate: string | null;
   technologies: TechIcon[];
-  // professional
   organization: string | null;
   organizationIcon: ResolvedIcon | null;
   role: string | null;
-  // personal
   imageUrl: string | null;
   link: string | null;
   githubLink: string | null;

@@ -13,10 +13,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // `ink` = foreground/text, `paper` = background. Dark terminal theme:
-        // ink is a light ramp (brightest → dimmest), paper a dark ramp
-        // (base → slightly-lighter surfaces). Every component uses these tokens,
-        // so the whole site themes from here.
+        // ink = foreground, paper = background; every component themes from these.
         ink: {
           DEFAULT: "#e8e8e8",
           muted: "#8a8a8a",

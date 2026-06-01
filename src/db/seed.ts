@@ -105,7 +105,6 @@ async function seedProjects() {
 async function main() {
   await seedAdmin();
   await seedProjects();
-  // postgres.js keeps the process alive; close the pool explicitly.
   await db.$client.end();
 }
 

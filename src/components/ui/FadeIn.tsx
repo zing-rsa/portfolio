@@ -10,10 +10,8 @@ interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Wraps children and fades them in/out as they enter/leave the viewport using
- * an IntersectionObserver. Fully off-screen elements drop back to a faint
- * state, so scrolling up and down keeps the page feeling alive — subtly. This
- * is animation #2 from the spec. Reduced-motion is handled in globals.css.
+ * Fades children in/out as they enter/leave the viewport via an
+ * IntersectionObserver. Reduced-motion is handled in globals.css.
  */
 export function FadeIn({
   delay = 0,

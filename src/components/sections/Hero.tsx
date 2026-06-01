@@ -10,11 +10,7 @@ function encode(value: string): string {
   return Buffer.from(value, "utf8").toString("base64");
 }
 
-/**
- * Above-the-fold hero. Server component: resolves social icon paths + brand
- * colours on the server and hands the typed heading + live clock to small
- * client islands.
- */
+/** Above-the-fold hero: typed heading, intro, social links and live local time. */
 export function Hero() {
   const socials = siteConfig.socials.map((s) => ({
     ...s,
@@ -29,7 +25,6 @@ export function Hero() {
 
       <TypedHeading
         text={siteConfig.heading}
-        // Pause once the greeting word ("hello,") is on screen, then continue.
         pauseAfter={siteConfig.heading.split(/\s/)[0]?.length ?? 0}
         pauseMs={650}
         className="text-lg font-bold leading-tight sm:text-xl"

@@ -58,7 +58,7 @@ export const siteConfig: SiteConfig = {
     { key: "github", label: "GitHub", href: "https://github.com/zing-rsa" },
     { key: "x", label: "X", href: "https://x.com/zing_rsa" },
     // Copy-to-clipboard socials — value stays server-side, never in the DOM.
-    { key: "discord", label: "Discord", copyValue: "zing" }, // your Discord username
+    { key: "discord", label: "Discord", copyValue: "zing_rsa" },
     { key: "email", label: "Email", copyValue: "kritz.rob@gmail.com" },
   ],
   footer: "Please get in touch if you'd like to chat about software.",

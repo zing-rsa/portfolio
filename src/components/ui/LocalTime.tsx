@@ -14,8 +14,6 @@ export function LocalTime({ timezone }: LocalTimeProps) {
   const [now, setNow] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fall back to the browser's local zone if `timezone` isn't a valid IANA
-    // name (e.g. an abbreviation like "SAST"), so the clock never throws.
     let fmt: Intl.DateTimeFormat;
     const opts: Intl.DateTimeFormatOptions = {
       hour: "2-digit",

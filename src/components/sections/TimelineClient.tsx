@@ -10,12 +10,7 @@ interface TimelineClientProps {
   pageSize: number;
 }
 
-/**
- * Renders the central-axis timeline and owns the "Load more" paging. Seeded with
- * the server-rendered first page; subsequent pages are fetched from
- * `/api/projects`. The user can ignore the button and scroll straight past to
- * the footer — nothing else loads unless they ask for it.
- */
+/** Central-axis timeline that owns the "Load more" paging from `/api/projects`. */
 export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
   const [items, setItems] = useState<TimelineProject[]>(initial.items);
   const [hasMore, setHasMore] = useState(initial.hasMore);
@@ -50,7 +45,6 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
 
   return (
     <div className="relative">
-      {/* Central (mobile: left) timeline axis. */}
       <div
         aria-hidden
         className="absolute bottom-0 left-4 top-0 w-px bg-ink-muted/40 lg:left-1/2 lg:-translate-x-1/2"
@@ -74,13 +68,11 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
               ) : null}
 
               <div className="relative lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
-                {/* Node on the axis. */}
                 <span
                   aria-hidden
                   className="absolute left-4 top-6 z-10 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-ink bg-paper lg:left-1/2"
                 />
 
-                {/* Professional → left column; Personal → right column. */}
                 {isPro ? (
                   <>
                     <FadeIn as="div" className="ml-10 lg:ml-0" delay={(i % pageSize) * 40}>
@@ -107,7 +99,6 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
       <div className={clsx("mt-12 flex flex-col items-center gap-3", "lg:ml-0")}>
         {error ? <p className="text-sm text-ink-muted">{error}</p> : null}
         {hasMore ? (
-          // bg-paper + z-10 knocks out the central axis line behind the button.
           <Button
             variant="outline"
             onClick={loadMore}
@@ -117,8 +108,6 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
             {loading ? "loading…" : "load more"}
           </Button>
         ) : (
-          // Sit above the central axis line with a paper knockout so the line
-          // doesn't run through the text (same trick as the year markers).
           <p className="relative z-10 mt-2 bg-paper px-3 py-1 text-xs text-ink-faint">
             — end of timeline —
           </p>
