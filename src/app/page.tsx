@@ -1,5 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
-import { GithubStats } from "@/components/sections/GithubStats";
+import { Stats } from "@/components/sections/Stats";
 import { Timeline } from "@/components/sections/Timeline";
 import { Footer } from "@/components/sections/Footer";
 
@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <GithubStats />
+      <Stats />
       <Timeline />
       <Footer />
     </main>

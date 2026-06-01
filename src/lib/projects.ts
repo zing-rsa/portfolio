@@ -5,7 +5,7 @@
  */
 import type { Project } from "@/lib/db/schema";
 import { getProjectsPage } from "@/lib/db/queries";
-import { resolveTechIcons, getIconPath, type TechIcon } from "@/lib/icons";
+import { resolveTechIcons, getIcon, type TechIcon } from "@/lib/icons";
 
 export const PAGE_SIZE = 10;
 
@@ -20,6 +20,7 @@ export interface TimelineProject {
   // professional
   organization: string | null;
   organizationIconPath: string | null;
+  organizationIconColor: string | null;
   role: string | null;
   // personal
   imageUrl: string | null;
@@ -37,7 +38,8 @@ export function serializeProject(p: Project): TimelineProject {
     endDate: p.endDate,
     technologies: resolveTechIcons(p.technologies),
     organization: p.organization,
-    organizationIconPath: getIconPath(p.organizationIcon),
+    organizationIconPath: getIcon(p.organizationIcon)?.path ?? null,
+    organizationIconColor: getIcon(p.organizationIcon)?.color ?? null,
     role: p.role,
     imageUrl: p.imageUrl,
     link: p.link,

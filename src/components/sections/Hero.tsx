@@ -1,16 +1,17 @@
 import { siteConfig } from "@/site.config";
-import { getSocialPath } from "@/lib/icons";
+import { getSocial } from "@/lib/icons";
 import { Icon, TypedHeading, LocalTime } from "@/components/ui";
 
 /**
- * Above-the-fold hero. Server component: resolves social icon paths on the
- * server and hands the typed heading + live clock to small client islands.
+ * Above-the-fold hero. Server component: resolves social icon paths + brand
+ * colours on the server and hands the typed heading + live clock to small
+ * client islands.
  */
 export function Hero() {
-  const socials = siteConfig.socials.map((s) => ({
-    ...s,
-    path: getSocialPath(s.key),
-  }));
+  const socials = siteConfig.socials.map((s) => {
+    const icon = getSocial(s.key);
+    return { ...s, path: icon?.path ?? null, color: icon?.color };
+  });
 
   return (
     <section className="mx-auto flex min-h-[88vh] w-full max-w-content flex-col justify-center px-6 py-24 sm:px-8">
@@ -26,7 +27,7 @@ export function Hero() {
         className="text-lg font-bold leading-tight sm:text-xl"
       />
 
-      <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
+      <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-md">
         {siteConfig.intro}
       </p>
 
@@ -42,7 +43,7 @@ export function Hero() {
             rel="noreferrer noopener"
             className="group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink"
           >
-            <Icon path={s.path} label={s.label} size={20} />
+            <Icon path={s.path} color={s.color} label={s.label} size={20} />
             <span className="text-sm group-hover:underline">{s.label}</span>
           </a>
         ))}

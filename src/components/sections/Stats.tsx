@@ -1,5 +1,5 @@
 import { getGithubStats, type CalendarDay } from "@/lib/github/stats";
-import { getIconPath } from "@/lib/icons";
+import { getIconPath, getIcon } from "@/lib/icons";
 import { Section, Card, Icon, FadeIn } from "@/components/ui";
 
 // Monochrome intensity ramp for the contribution calendar.
@@ -24,36 +24,37 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Calendar({ weeks, total }: { weeks: CalendarDay[][]; total: number }) {
+function Calendar({ weeks }: { weeks: CalendarDay[][] }) {
   return (
     <div>
-      <div className="mb-3 flex items-baseline justify-between">
-        <h3 className="text-sm text-ink-muted">contributions</h3>
-        <span className="text-xs text-ink-faint tabular-nums">
-          {total.toLocaleString()} in the last year
-        </span>
-      </div>
-      <div className="overflow-x-auto pb-2">
-        <div className="flex gap-[3px]">
-          {weeks.map((week, wi) => (
-            <div key={wi} className="flex flex-col gap-[3px]">
-              {week.map((day) => (
-                <span
-                  key={day.date}
-                  title={`${day.date}: ${day.count} contributions`}
-                  className={`h-[11px] w-[11px] rounded-[2px] ${LEVEL_BG[day.level]}`}
-                />
-              ))}
-            </div>
-          ))}
+      {/* Center the whole calendar (header, grid, legend) as one fit-content
+          block; capped at full width so it still scrolls on narrow screens. */}
+      <div className="mx-auto w-fit max-w-full">
+        <h3 className="mb-3 text-sm text-ink-muted">
+          contribution graph · last year
+        </h3>
+        <div className="overflow-x-auto pb-2">
+          <div className="flex gap-[3px]">
+            {weeks.map((week, wi) => (
+              <div key={wi} className="flex flex-col gap-[3px]">
+                {week.map((day) => (
+                  <span
+                    key={day.date}
+                    title={`${day.date}: ${day.count} contributions`}
+                    className={`h-[11px] w-[11px] rounded-[2px] ${LEVEL_BG[day.level]}`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-ink-faint">
-        <span>less</span>
-        {LEVEL_BG.map((bg, i) => (
-          <span key={i} className={`h-[10px] w-[10px] rounded-[2px] ${bg}`} />
-        ))}
-        <span>more</span>
+        <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-ink-faint">
+          <span>less</span>
+          {LEVEL_BG.map((bg, i) => (
+            <span key={i} className={`h-[10px] w-[10px] rounded-[2px] ${bg}`} />
+          ))}
+          <span>more</span>
+        </div>
       </div>
     </div>
   );
@@ -86,7 +87,11 @@ function RepoCard({
       ) : null}
       {repo.language ? (
         <span className="mt-auto inline-flex items-center gap-1 text-xs text-ink-faint">
-          <Icon path={getIconPath(repo.language.toLowerCase())} size={12} />
+          <Icon
+            path={getIcon(repo.language.toLowerCase())?.path ?? null}
+            color={getIcon(repo.language.toLowerCase())?.color}
+            size={12}
+          />
           {repo.language}
         </span>
       ) : null}
@@ -100,10 +105,13 @@ function LanguageBars({ langs }: { langs: { name: string; bytes: number }[] }) {
     <div>
       <h3 className="mb-3 text-sm text-ink-muted">most used</h3>
       <ul className="flex flex-col gap-2">
-        {langs.map((l) => (
+        {langs.map((l) => {
+          const icon = getIcon(l.name.toLowerCase());
+          return (
           <li key={l.name} className="flex items-center gap-3 text-xs">
             <Icon
-              path={getIconPath(l.name.toLowerCase())}
+              path={icon?.path ?? null}
+              color={icon?.color}
               size={14}
               className="shrink-0"
             />
@@ -115,19 +123,23 @@ function LanguageBars({ langs }: { langs: { name: string; bytes: number }[] }) {
               />
             </span>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
 }
 
-/** GitHub stats overview. Server component; degrades gracefully without a token. */
-export async function GithubStats() {
+/**
+ * Stats section overview. Server component; sources data from GitHub and
+ * degrades gracefully without a token.
+ */
+export async function Stats() {
   const stats = await getGithubStats();
 
   if (!stats) {
     return (
-      <Section label="~/github" id="github">
+      <Section label="~/stats" id="stats">
         <FadeIn>
           <Card className="text-sm text-ink-muted">
             GitHub stats are unavailable. Set <code>GITHUB_TOKEN</code> and a
@@ -140,22 +152,23 @@ export async function GithubStats() {
   }
 
   return (
-    <Section label="~/github" id="github">
-      <FadeIn className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-        <Stat label="repos" value={stats.publicRepos} />
-        <Stat label="stars" value={stats.totalStars} />
-        <Stat label="followers" value={stats.followers} />
-        <Stat label="following" value={stats.following} />
-        <Stat label="starred" value={stats.starredCount} />
+    <Section label="~/stats" id="stats">
+      <FadeIn className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+        <Stat label="personal repos" value={stats.publicRepos} />
+        <Stat label="github stars" value={stats.totalStars} />
+        <Stat label="ytd contributions" value={stats.totalContributions} />
+        <Stat label="github followers" value={stats.followers} />
+        <Stat label="github following" value={stats.following} />
+        <Stat label="github starred" value={stats.starredCount} />
       </FadeIn>
 
       <FadeIn className="mt-12">
-        <Calendar weeks={stats.calendarWeeks} total={stats.totalContributions} />
+        <Calendar weeks={stats.calendarWeeks} />
       </FadeIn>
 
       {stats.pinned.length > 0 ? (
         <FadeIn className="mt-12">
-          <h3 className="mb-4 text-sm text-ink-muted">pinned</h3>
+          <h3 className="mb-4 text-sm text-ink-muted">repos I&apos;m proud of</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {stats.pinned.map((repo) => (
               <RepoCard key={repo.url} repo={repo} />

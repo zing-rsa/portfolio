@@ -7,15 +7,17 @@ interface IconProps {
   label?: string;
   size?: number;
   className?: string;
+  /** Fill colour (e.g. a brand hex). Defaults to `currentColor` (monochrome). */
+  color?: string | null;
 }
 
 /**
- * Renders a single-colour (currentColor) glyph from an SVG path string. Kept
- * free of any simple-icons import so it is safe in client bundles. When no path
- * resolves it falls back to a small bordered square, so missing brand icons
- * never break the layout.
+ * Renders a glyph from an SVG path string. Fills with `currentColor` by default
+ * (monochrome), or a given brand colour. Kept free of any simple-icons import so
+ * it is safe in client bundles. When no path resolves it falls back to a small
+ * bordered square, so missing brand icons never break the layout.
  */
-export function Icon({ path, label, size = 18, className }: IconProps) {
+export function Icon({ path, label, size = 18, className, color }: IconProps) {
   if (!path) {
     return (
       <span
@@ -36,7 +38,7 @@ export function Icon({ path, label, size = 18, className }: IconProps) {
       viewBox="0 0 24 24"
       width={size}
       height={size}
-      fill="currentColor"
+      fill={color ?? "currentColor"}
       className={clsx("inline-block align-middle", className)}
     >
       {label ? <title>{label}</title> : null}

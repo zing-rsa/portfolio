@@ -12,7 +12,12 @@ import {
 export interface Technology {
   /** Display name, e.g. "TypeScript". */
   name: string;
-  /** simple-icons slug, e.g. "typescript". Optional — falls back to the name. */
+  /**
+   * simple-icons slug, e.g. "typescript". Optional — falls back to the name.
+   * The glyph + colour are resolved entirely in code: a slug is looked up in
+   * simple-icons, and any custom icon/colour is defined once in
+   * `src/lib/icon-overrides.ts`. There is no per-project icon customisation.
+   */
   icon?: string;
 }
 

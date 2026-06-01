@@ -1,5 +1,5 @@
 import { siteConfig } from "@/site.config";
-import { getSocialPath } from "@/lib/icons";
+import { getSocial } from "@/lib/icons";
 import { Icon } from "@/components/ui";
 
 const emailLink = siteConfig.socials.find((s) => s.key === "email");
@@ -16,7 +16,7 @@ export function Footer() {
             href={emailLink.href}
             className="inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink hover:underline"
           >
-            <Icon path={getSocialPath("email")} label="Email" size={18} />
+            <Icon path={getSocial("email")?.path ?? null} label="Email" size={18} />
             <span className="text-sm">{emailLink.href.replace("mailto:", "")}</span>
           </a>
         ) : null}

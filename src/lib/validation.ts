@@ -24,13 +24,18 @@ function parseTechnologies(v: unknown): Technology[] {
   if (!Array.isArray(v)) return [];
   const out: Technology[] = [];
   for (const item of v) {
-    if (item && typeof item === "object" && "name" in item) {
-      const name = asString((item as Technology).name);
-      if (name) {
-        const icon = asOptionalString((item as Technology).icon);
-        out.push(icon ? { name, icon } : { name });
-      }
-    }
+    if (!item || typeof item !== "object" || !("name" in item)) continue;
+    const t = item as Record<string, unknown>;
+    const name = asString(t.name);
+    if (!name) continue;
+
+    const tech: Technology = { name };
+
+    // Only a simple-icons slug; the glyph/colour is resolved in code.
+    const icon = asOptionalString(t.icon);
+    if (icon) tech.icon = icon;
+
+    out.push(tech);
   }
   return out;
 }

@@ -45,6 +45,9 @@
 ### light footer section
 - please get in touch if you would like to chat about software
 
+### About this website section
+- 
+
 ### backoffice cms
 - the site has a backoffice cms that can be accessed by going to a specific path on the url
 - an admin will be presented a login page where they can login

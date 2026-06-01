@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Project, Technology } from "@/lib/db/schema";
 import { Button } from "@/components/ui";
+import { TechnologiesEditor } from "./TechnologiesEditor";
 
 interface ProjectFormProps {
   project?: Project | null;
@@ -15,21 +16,6 @@ type ProjectType = "professional" | "personal";
 const inputClass =
   "border border-ink-muted/50 bg-paper px-3 py-2 text-sm focus:border-ink focus:outline-none";
 
-function techToText(tech: Technology[] | null | undefined): string {
-  return (tech ?? []).map((t) => (t.icon ? `${t.name}, ${t.icon}` : t.name)).join("\n");
-}
-
-function textToTech(text: string): Technology[] {
-  return text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [name, icon] = line.split(",").map((s) => s.trim());
-      return icon ? { name, icon } : { name };
-    });
-}
-
 /**
  * Create/edit form for a project. One form handles both timeline variants;
  * professional vs personal fields are shown based on the selected type.
@@ -41,7 +27,9 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
   const [description, setDescription] = useState(project?.description ?? "");
   const [startDate, setStartDate] = useState(project?.startDate ?? "");
   const [endDate, setEndDate] = useState(project?.endDate ?? "");
-  const [techText, setTechText] = useState(techToText(project?.technologies));
+  const [technologies, setTechnologies] = useState<Technology[]>(
+    project?.technologies ?? [],
+  );
   const [organization, setOrganization] = useState(project?.organization ?? "");
   const [organizationIcon, setOrganizationIcon] = useState(
     project?.organizationIcon ?? "",
@@ -65,7 +53,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
       description,
       startDate,
       endDate: endDate || null,
-      technologies: textToTech(techText),
+      technologies: technologies.filter((t) => t.name.trim()),
       organization,
       organizationIcon,
       role,
@@ -217,18 +205,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         </div>
       )}
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-ink-muted">
-          technologies — one per line: <code>Name, icon-slug</code>
-        </span>
-        <textarea
-          rows={4}
-          value={techText}
-          onChange={(e) => setTechText(e.target.value)}
-          placeholder={"TypeScript, typescript\nPostgreSQL, postgresql"}
-          className={`${inputClass} font-mono`}
-        />
-      </label>
+      <TechnologiesEditor value={technologies} onChange={setTechnologies} />
 
       {error ? <p className="text-sm text-ink">⚠ {error}</p> : null}
 
