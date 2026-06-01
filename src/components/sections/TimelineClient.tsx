@@ -107,11 +107,21 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
       <div className={clsx("mt-12 flex flex-col items-center gap-3", "lg:ml-0")}>
         {error ? <p className="text-sm text-ink-muted">{error}</p> : null}
         {hasMore ? (
-          <Button variant="outline" onClick={loadMore} disabled={loading}>
+          // bg-paper + z-10 knocks out the central axis line behind the button.
+          <Button
+            variant="outline"
+            onClick={loadMore}
+            disabled={loading}
+            className="relative z-10 bg-paper"
+          >
             {loading ? "loading…" : "load more"}
           </Button>
         ) : (
-          <p className="text-xs text-ink-faint">— end of timeline —</p>
+          // Sit above the central axis line with a paper knockout so the line
+          // doesn't run through the text (same trick as the year markers).
+          <p className="relative z-10 mt-2 bg-paper px-3 py-1 text-xs text-ink-faint">
+            — end of timeline —
+          </p>
         )}
       </div>
     </div>

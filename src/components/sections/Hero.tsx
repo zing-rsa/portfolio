@@ -1,6 +1,14 @@
 import { siteConfig } from "@/site.config";
 import { getSocial } from "@/lib/icons";
-import { Icon, TypedHeading, LocalTime } from "@/components/ui";
+import { Icon, TypedHeading, LocalTime, CopyButton } from "@/components/ui";
+
+const socialClass =
+  "group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink";
+
+/** Base64-encode a value server-side so its plaintext never reaches the client. */
+function encode(value: string): string {
+  return Buffer.from(value, "utf8").toString("base64");
+}
 
 /**
  * Above-the-fold hero. Server component: resolves social icon paths + brand
@@ -8,10 +16,10 @@ import { Icon, TypedHeading, LocalTime } from "@/components/ui";
  * client islands.
  */
 export function Hero() {
-  const socials = siteConfig.socials.map((s) => {
-    const icon = getSocial(s.key);
-    return { ...s, path: icon?.path ?? null, color: icon?.color };
-  });
+  const socials = siteConfig.socials.map((s) => ({
+    ...s,
+    icon: getSocial(s.key),
+  }));
 
   return (
     <section className="mx-auto flex min-h-[88vh] w-full max-w-content flex-col justify-center px-6 py-24 sm:px-8">
@@ -35,18 +43,29 @@ export function Hero() {
         aria-label="Social and contact links"
         className="mt-10 flex flex-wrap items-center gap-5"
       >
-        {socials.map((s) => (
-          <a
-            key={s.key}
-            href={s.href}
-            target={s.key === "email" ? undefined : "_blank"}
-            rel="noreferrer noopener"
-            className="group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink"
-          >
-            <Icon path={s.path} color={s.color} label={s.label} size={20} />
-            <span className="text-sm group-hover:underline">{s.label}</span>
-          </a>
-        ))}
+        {socials.map((s) =>
+          s.copyValue ? (
+            <CopyButton
+              key={s.key}
+              encoded={encode(s.copyValue)}
+              label={s.label}
+              icon={s.icon}
+              size={20}
+              className={socialClass}
+            />
+          ) : (
+            <a
+              key={s.key}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              className={socialClass}
+            >
+              <Icon icon={s.icon} label={s.label} size={20} />
+              <span className="text-sm group-hover:underline">{s.label}</span>
+            </a>
+          ),
+        )}
       </nav>
 
       <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-faint">

@@ -1,6 +1,6 @@
 import { getGithubStats, type CalendarDay } from "@/lib/github/stats";
 import { getIconPath, getIcon } from "@/lib/icons";
-import { Section, Card, Icon, FadeIn } from "@/components/ui";
+import { Section, Card, Icon, FadeIn, ScrollToEnd } from "@/components/ui";
 
 // Monochrome intensity ramp for the contribution calendar.
 const LEVEL_BG = [
@@ -33,7 +33,7 @@ function Calendar({ weeks }: { weeks: CalendarDay[][] }) {
         <h3 className="mb-3 text-sm text-ink-muted">
           contribution graph · last year
         </h3>
-        <div className="overflow-x-auto pb-2">
+        <ScrollToEnd className="pb-2">
           <div className="flex gap-[3px]">
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-[3px]">
@@ -47,7 +47,7 @@ function Calendar({ weeks }: { weeks: CalendarDay[][] }) {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollToEnd>
         <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-ink-faint">
           <span>less</span>
           {LEVEL_BG.map((bg, i) => (
@@ -70,10 +70,10 @@ function RepoCard({
       href={repo.url}
       target="_blank"
       rel="noreferrer noopener"
-      className="flex h-full flex-col gap-2 border border-ink-muted/40 bg-paper p-5 transition-colors duration-200 hover:border-ink"
+      className="flex h-full min-w-0 flex-col gap-2 border border-ink-muted/40 bg-paper p-5 transition-colors duration-200 hover:border-ink"
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="truncate text-sm font-bold">
+      <div className="flex min-w-0 items-center justify-between gap-2">
+        <span className="min-w-0 truncate text-sm font-bold">
           {repo.nameWithOwner ?? repo.name}
         </span>
         <span className="flex shrink-0 items-center gap-1 text-xs text-ink-muted">
@@ -87,11 +87,7 @@ function RepoCard({
       ) : null}
       {repo.language ? (
         <span className="mt-auto inline-flex items-center gap-1 text-xs text-ink-faint">
-          <Icon
-            path={getIcon(repo.language.toLowerCase())?.path ?? null}
-            color={getIcon(repo.language.toLowerCase())?.color}
-            size={12}
-          />
+          <Icon icon={getIcon(repo.language.toLowerCase())} size={12} />
           {repo.language}
         </span>
       ) : null}
@@ -108,15 +104,10 @@ function LanguageBars({ langs }: { langs: { name: string; bytes: number }[] }) {
         {langs.map((l) => {
           const icon = getIcon(l.name.toLowerCase());
           return (
-          <li key={l.name} className="flex items-center gap-3 text-xs">
-            <Icon
-              path={icon?.path ?? null}
-              color={icon?.color}
-              size={14}
-              className="shrink-0"
-            />
-            <span className="w-24 shrink-0 truncate">{l.name}</span>
-            <span className="h-2 flex-1 bg-ink/[0.07]">
+          <li key={l.name} className="flex min-w-0 items-center gap-3 text-xs">
+            <Icon icon={icon} size={14} className="shrink-0" />
+            <span className="w-20 shrink-0 truncate sm:w-24">{l.name}</span>
+            <span className="h-2 min-w-0 flex-1 bg-ink/[0.07]">
               <span
                 className="block h-full bg-ink"
                 style={{ width: `${(l.bytes / max) * 100}%` }}
@@ -179,24 +170,24 @@ export async function Stats() {
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
         {stats.topLanguages.length > 0 ? (
-          <FadeIn>
+          <FadeIn className="min-w-0">
             <LanguageBars langs={stats.topLanguages} />
           </FadeIn>
         ) : null}
 
         {stats.starredSample.length > 0 ? (
-          <FadeIn>
+          <FadeIn className="min-w-0">
             <h3 className="mb-4 text-sm text-ink-muted">recently starred</h3>
             <ul className="flex flex-col divide-y divide-ink-muted/20">
               {stats.starredSample.map((repo) => (
-                <li key={repo.url} className="py-2">
+                <li key={repo.url} className="min-w-0 py-2">
                   <a
                     href={repo.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="flex items-center justify-between gap-3 text-sm hover:underline"
+                    className="flex min-w-0 items-center justify-between gap-3 text-sm hover:underline"
                   >
-                    <span className="truncate">{repo.nameWithOwner ?? repo.name}</span>
+                    <span className="min-w-0 truncate">{repo.nameWithOwner ?? repo.name}</span>
                     <span className="flex shrink-0 items-center gap-1 text-xs text-ink-muted">
                       <Icon path={getIconPath("github")} size={12} /> {repo.stars}
                     </span>

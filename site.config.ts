@@ -14,7 +14,15 @@ export type SocialKey = "github" | "x" | "discord" | "email";
 export interface SocialLink {
   key: SocialKey;
   label: string;
-  href: string;
+  /** Link socials (e.g. GitHub, X) open this URL. */
+  href?: string;
+  /**
+   * Copy socials (e.g. email, Discord) copy this value to the clipboard on
+   * click instead of navigating. It is kept out of the rendered HTML: server
+   * components base64-encode it before passing it to the client, so the raw
+   * value never appears in the DOM or JS bundle (a basic anti-scraping guard).
+   */
+  copyValue?: string;
 }
 
 export interface SiteConfig {
@@ -49,8 +57,9 @@ export const siteConfig: SiteConfig = {
   socials: [
     { key: "github", label: "GitHub", href: "https://github.com/zing-rsa" },
     { key: "x", label: "X", href: "https://x.com/zing_rsa" },
-    { key: "discord", label: "Discord", href: "https://discord.com/users/zing" },
-    { key: "email", label: "Email", href: "mailto:hello@example.com" },
+    // Copy-to-clipboard socials — value stays server-side, never in the DOM.
+    { key: "discord", label: "Discord", copyValue: "zing" }, // your Discord username
+    { key: "email", label: "Email", copyValue: "kritz.rob@gmail.com" },
   ],
   footer: "Please get in touch if you'd like to chat about software.",
   adminPath: "/admin",

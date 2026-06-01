@@ -24,7 +24,7 @@ function TechBadges({ tech }: { tech: TimelineProject["technologies"] }) {
           key={t.name}
           className="inline-flex items-center gap-1.5 border border-ink-muted/40 px-2 py-1 text-xs text-ink-muted"
         >
-          <Icon path={t.path} color={t.color} size={12} />
+          <Icon icon={t} size={12} />
           {t.name}
         </li>
       ))}
@@ -68,10 +68,9 @@ export function ProjectCard({ project }: { project: TimelineProject }) {
             "lg:justify-end",
           )}
         >
-          {project.organizationIconPath ? (
+          {project.organizationIcon ? (
             <Icon
-              path={project.organizationIconPath}
-              color={project.organizationIconColor}
+              icon={project.organizationIcon}
               size={16}
               label={project.organization ?? undefined}
             />

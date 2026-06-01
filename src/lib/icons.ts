@@ -66,23 +66,53 @@ function readableColor(hex: string): string {
 }
 
 export interface ResolvedIcon {
-  path: string;
-  /** Brand colour (CSS hex), lightened if too dark for the dark theme. */
-  color: string;
+  /** Single-path glyph (simple-icons or a custom `path`). Null for `svg` icons. */
+  path: string | null;
+  /** Raw inner SVG markup, for arbitrary multi-element icons. */
+  svg?: string | null;
+  /** SVG viewBox; defaults to "0 0 24 24" at render time when omitted. */
+  viewBox?: string;
+  /** Fill colour (CSS hex). Null means render in the current text colour. */
+  color: string | null;
+}
+
+const DEFAULT_VIEWBOX = "0 0 24 24";
+
+/**
+ * Split arbitrary SVG markup into its inner content and viewBox so we can
+ * re-render it inside a sized wrapper `<svg>`. Falls back to a 24×24 viewBox.
+ */
+function parseSvg(markup: string): { inner: string; viewBox: string } {
+  const viewBox = markup.match(/viewBox\s*=\s*["']([^"']+)["']/i)?.[1];
+  const inner = markup.match(/<svg[^>]*>([\s\S]*)<\/svg>/i)?.[1] ?? markup;
+  return { inner: inner.trim(), viewBox: viewBox ?? DEFAULT_VIEWBOX };
 }
 
 /**
- * Core resolver, consulted by everything. Order: explicit overrides (aliases or
- * fully-custom icons) first, then simple-icons. This is what lets a single
- * `iconOverrides` entry fix an icon (e.g. C#) across every section.
+ * Core resolver, consulted by everything. Order: explicit overrides (aliases,
+ * custom paths, or arbitrary SVGs) first, then simple-icons. This is what lets a
+ * single `iconOverrides` entry fix an icon (e.g. C#) across every section.
  */
 function resolve(name: string): ResolvedIcon | null {
   const key = name.toLowerCase();
 
   const override = iconOverrides[key];
   if (override) {
+    if ("svg" in override) {
+      const { inner, viewBox } = parseSvg(override.svg);
+      return {
+        path: null,
+        svg: inner,
+        viewBox: override.viewBox ?? viewBox,
+        color: override.color ?? null,
+      };
+    }
     if ("path" in override) {
-      return { path: override.path, color: override.color };
+      return {
+        path: override.path,
+        viewBox: override.viewBox,
+        color: override.color,
+      };
     }
     const aliased = bySlug.get(override.slug.toLowerCase());
     if (aliased) {
@@ -121,6 +151,8 @@ export function getSocial(key: SocialKey): ResolvedIcon | null {
 export interface TechIcon {
   name: string;
   path: string | null;
+  svg?: string | null;
+  viewBox?: string;
   color: string | null;
 }
 
@@ -140,6 +172,8 @@ export function resolveTechIcons(
     return {
       name: t.name,
       path: resolved?.path ?? null,
+      svg: resolved?.svg ?? null,
+      viewBox: resolved?.viewBox,
       color: resolved?.color ?? null,
     };
   });
