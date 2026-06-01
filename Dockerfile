@@ -1,0 +1,37 @@
+# syntax=docker/dockerfile:1
+
+# ---- deps: install with bun (lockfile-faithful) ----
+FROM oven/bun:1.3.10 AS deps
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+# ---- build: compile Next.js with bun, emit standalone output ----
+FROM oven/bun:1.3.10 AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# DATABASE_URL is not needed at build time (the app is force-dynamic), but
+# Next reads NEXT_PUBLIC_* envs here if any are added later.
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN bun run build
+
+# ---- runtime: minimal node image running the standalone server ----
+FROM node:22-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Run as the non-root user shipped with the node image.
+RUN chown node:node /app
+USER node
+
+# Standalone trace output + static assets + public dir.
+COPY --from=build --chown=node:node /app/.next/standalone ./
+COPY --from=build --chown=node:node /app/.next/static ./.next/static
+COPY --from=build --chown=node:node /app/public ./public
+
+EXPOSE 3000
+CMD ["node", "server.js"]

@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-mono antialiased;
+    /* Subtle terminal scanline texture — extremely faint, never flashy. */
+    background-image: linear-gradient(
+      rgba(10, 10, 10, 0.015) 1px,
+      transparent 1px
+    );
+    background-size: 100% 3px;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+}
+
+@layer utilities {
+  /* Scroll-driven fade used by the FadeIn component. */
+  .fade-init {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 700ms ease,
+      transform 700ms ease;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fade-out {
+    opacity: 0.15;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .fade-init,
+  .fade-in,
+  .fade-out {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
