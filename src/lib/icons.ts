@@ -1,5 +1,4 @@
 import * as simpleIcons from "simple-icons";
-import type { SocialKey } from "@/site.config";
 import { iconOverrides } from "./icon-overrides";
 
 interface SimpleIcon {
