@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { clsx } from "./clsx";
+import { clsx } from "@/lib/utils";
 
 interface ScrollToEndProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

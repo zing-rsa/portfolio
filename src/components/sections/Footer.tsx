@@ -1,5 +1,6 @@
 import { siteConfig } from "@/site.config";
-import { getSocial } from "@/lib/icons";
+import { getIcon } from "@/lib/icons";
+import { encodeBase64 } from "@/lib/utils";
 import { CopyButton } from "@/components/ui";
 
 const emailLink = siteConfig.socials.find((s) => s.key === "email");
@@ -13,9 +14,9 @@ export function Footer() {
 
         {emailLink?.copyValue ? (
           <CopyButton
-            encoded={Buffer.from(emailLink.copyValue, "utf8").toString("base64")}
+            encoded={encodeBase64(emailLink.copyValue)}
             label="Email"
-            icon={getSocial("email")}
+            icon={getIcon("email")}
             size={18}
             className="inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink"
           />

@@ -1,4 +1,4 @@
-import { clsx } from "./clsx";
+import { clsx } from "@/lib/utils";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   as?: keyof React.JSX.IntrinsicElements;

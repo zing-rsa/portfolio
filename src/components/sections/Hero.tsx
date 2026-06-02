@@ -1,20 +1,13 @@
 import { siteConfig } from "@/site.config";
-import { getSocial } from "@/lib/icons";
+import { getIcon } from "@/lib/icons";
+import { encodeBase64 } from "@/lib/utils";
 import { Icon, TypedHeading, LocalTime, CopyButton } from "@/components/ui";
-
-const socialClass =
-  "group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink";
-
-/** Base64-encode a value server-side so its plaintext never reaches the client. */
-function encode(value: string): string {
-  return Buffer.from(value, "utf8").toString("base64");
-}
 
 /** Above-the-fold hero: typed heading, intro, social links and live local time. */
 export function Hero() {
   const socials = siteConfig.socials.map((s) => ({
     ...s,
-    icon: getSocial(s.key),
+    icon: getIcon(s.key),
   }));
 
   return (
@@ -42,11 +35,11 @@ export function Hero() {
           s.copyValue ? (
             <CopyButton
               key={s.key}
-              encoded={encode(s.copyValue)}
+              encoded={encodeBase64(s.copyValue)}
               label={s.label}
               icon={s.icon}
               size={20}
-              className={socialClass}
+              className={"group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink"}
             />
           ) : (
             <a
@@ -54,7 +47,7 @@ export function Hero() {
               href={s.href}
               target="_blank"
               rel="noreferrer noopener"
-              className={socialClass}
+              className={"group inline-flex items-center gap-2 text-ink-muted transition-colors hover:text-ink"}
             >
               <Icon icon={s.icon} label={s.label} size={20} />
               <span className="text-sm group-hover:underline">{s.label}</span>

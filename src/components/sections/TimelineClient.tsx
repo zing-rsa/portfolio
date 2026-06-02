@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { TimelineProject, TimelinePage } from "@/lib/projects";
 import { ProjectCard } from "./ProjectCard";
-import { Button, FadeIn, clsx } from "@/components/ui";
+import { Button, FadeIn } from "@/components/ui";
+import { clsx } from "@/lib/utils";
 
 interface TimelineClientProps {
   initial: TimelinePage;

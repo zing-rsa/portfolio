@@ -1,4 +1,4 @@
-import { clsx } from "./clsx";
+import { clsx } from "@/lib/utils";
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   /** Terminal-style label shown above the section, e.g. "~/projects". */

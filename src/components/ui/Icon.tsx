@@ -1,4 +1,4 @@
-import { clsx } from "./clsx";
+import { clsx } from "@/lib/utils";
 
 /** Render-ready icon data (matches the shape returned by `@/lib/icons`). */
 interface IconData {

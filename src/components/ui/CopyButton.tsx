@@ -2,7 +2,7 @@
 
 import { Icon } from "./Icon";
 import { toast } from "./Toaster";
-import { clsx } from "./clsx";
+import { clsx, decodeBase64 } from "@/lib/utils";
 
 interface IconData {
   path?: string | null;
@@ -35,7 +35,7 @@ export function CopyButton({
 }: CopyButtonProps) {
   async function onClick() {
     try {
-      const value = atob(encoded);
+      const value = decodeBase64(encoded);
       await navigator.clipboard.writeText(value);
       toast(`${label} copied to clipboard`);
     } catch {

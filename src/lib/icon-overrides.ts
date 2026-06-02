@@ -40,11 +40,14 @@ export type IconOverride =
 // (GitHub itself uses green #178600 for the C# language label).
 const CSHARP_PATH =
   "m11.5 15.97l.41 2.44c-.26.14-.68.27-1.24.39c-.57.13-1.24.2-2.01.2c-2.21-.04-3.87-.7-4.98-1.96Q2 15.135 2 12.21c.05-2.31.72-4.08 2-5.32C5.32 5.64 6.96 5 8.94 5c.75 0 1.4.07 1.94.19s.94.25 1.2.4l-.58 2.49l-1.06-.34c-.4-.1-.86-.15-1.39-.15c-1.16-.01-2.12.36-2.87 1.1c-.76.73-1.15 1.85-1.18 3.34c0 1.36.37 2.42 1.08 3.2c.71.77 1.71 1.17 2.99 1.18l1.33-.12c.43-.08.79-.19 1.1-.32M13.89 19l.61-4H13l.34-2h1.5l.32-2h-1.5L14 9h1.5l.61-4h2l-.61 4h1l.61-4h2l-.61 4H22l-.34 2h-1.5l-.32 2h1.5L21 15h-1.5l-.61 4h-2l.61-4h-1l-.61 4zm2.95-6h1l.32-2h-1z";
+const EMAIL_PATH =
+  "M1.5 4.5h21A1.5 1.5 0 0 1 24 6v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5Zm.6 1.8L12 12.9l9.9-6.6H2.1Zm19.8 1.68-7.74 5.16a1.5 1.5 0 0 1-1.32 0L4.1 8.78V17.7h17.8V8.78Z";
 
 export const iconOverrides: Record<string, IconOverride> = {
   // Custom path (no simple-icons entry):
   "c#": { path: CSHARP_PATH, color: "#9B4F96" },
   csharp: { path: CSHARP_PATH, color: "#9B4F96" },
+  email: { path: EMAIL_PATH , color: "#ededed"},
 
   // Aliases — names that differ from their simple-icons slug:
   "c++": { slug: "cplusplus" },

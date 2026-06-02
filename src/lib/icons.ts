@@ -1,12 +1,3 @@
-/**
- * Server-side icon resolver.
- *
- * `simple-icons` ships ~3300 brand icons; importing the whole set into a client
- * bundle would be enormous. So this module resolves a slug to a plain SVG path
- * string on the server only, and we pass that string down to the client `Icon`
- * component. Keep imports of this module on the server (server components, route
- * handlers, seed scripts) — never in a "use client" module.
- */
 import * as simpleIcons from "simple-icons";
 import type { SocialKey } from "@/site.config";
 import { iconOverrides } from "./icon-overrides";
@@ -34,16 +25,6 @@ const bySlug: Map<string, SimpleIcon> = (() => {
   return map;
 })();
 
-/** Generic envelope — email has no brand icon in simple-icons. */
-const EMAIL_PATH =
-  "M1.5 4.5h21A1.5 1.5 0 0 1 24 6v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5Zm.6 1.8L12 12.9l9.9-6.6H2.1Zm19.8 1.68-7.74 5.16a1.5 1.5 0 0 1-1.32 0L4.1 8.78V17.7h17.8V8.78Z";
-
-const SOCIAL_SLUGS: Record<SocialKey, string | null> = {
-  github: "github",
-  x: "x",
-  discord: "discord",
-  email: null,
-};
 
 /** Light tone used when a brand colour is too dark to read on the dark theme. */
 const DARK_FALLBACK = "#ededed";
@@ -135,13 +116,6 @@ export function getIcon(slug: string | null | undefined): ResolvedIcon | null {
 export function getIconPath(slug: string | null | undefined): string | null {
   return slug ? (resolve(slug)?.path ?? null) : null;
 }
-
-/** Resolve a hero social link to its SVG path + brand colour. */
-export function getSocial(key: SocialKey): ResolvedIcon | null {
-  if (key === "email") return { path: EMAIL_PATH, color: DARK_FALLBACK };
-  return getIcon(SOCIAL_SLUGS[key]);
-}
-
 export interface TechIcon {
   name: string;
   path: string | null;

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { TimelineProject } from "@/lib/projects";
-import { Icon, clsx } from "@/components/ui";
+import { Icon } from "@/components/ui";
+import { clsx } from "@/lib/utils";
 import { GITHUB_GLYPH, EXTERNAL_GLYPH } from "@/components/ui/glyphs";
 
 function formatRange(start: string, end: string | null): string {

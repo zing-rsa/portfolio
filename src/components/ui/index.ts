@@ -8,4 +8,3 @@ export { LocalTime } from "./LocalTime";
 export { ScrollToEnd } from "./ScrollToEnd";
 export { Toaster, toast } from "./Toaster";
 export { CopyButton } from "./CopyButton";
-export { clsx } from "./clsx";

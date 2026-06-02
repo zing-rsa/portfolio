@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { clsx } from "./clsx";
+import { clsx } from "@/lib/utils";
 
 interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Delay before fading in, in ms — used to subtly stagger lists. */
