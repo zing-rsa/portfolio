@@ -16,6 +16,10 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
+# Bundle a standalone DB migrator (drizzle-orm + postgres inlined into one file)
+# so the slim runtime can run migrations without drizzle-kit or dev node_modules.
+RUN bun build ./src/lib/db/migrate.ts --target node --outfile migrate.mjs
+
 # ---- runtime: minimal node image running the standalone server ----
 FROM node:22-slim AS runner
 WORKDIR /app
@@ -32,6 +36,10 @@ USER node
 COPY --from=build --chown=node:node /app/.next/standalone ./
 COPY --from=build --chown=node:node /app/.next/static ./.next/static
 COPY --from=build --chown=node:node /app/public ./public
+
+# DB migrator bundle + SQL files, run by the migrate initContainer before the app starts.
+COPY --from=build --chown=node:node /app/migrate.mjs ./migrate.mjs
+COPY --from=build --chown=node:node /app/drizzle ./drizzle
 
 EXPOSE 3000
 CMD ["node", "server.js"]

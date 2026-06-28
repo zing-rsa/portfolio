@@ -8,6 +8,15 @@ spec:
     metadata: { labels: { app: portfolio } }
     spec:
       imagePullSecrets: [{ name: ghcr }]
+      initContainers:
+        - name: migrate
+          image: ghcr.io/zing-rsa/portfolio
+          command: ["node", "migrate.mjs"]
+          envFrom:
+            - secretRef: { name: portfolio-app }
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { memory: 256Mi }
       containers:
         - name: portfolio
           image: ghcr.io/zing-rsa/portfolio
