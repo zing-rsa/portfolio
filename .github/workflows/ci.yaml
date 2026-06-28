@@ -12,4 +12,6 @@ jobs:
     needs: build
     permissions: { contents: write }
     uses: zing-rsa/lab/.github/workflows/deploy.yml@main
-    with: { env: dev, tag: ${{ github.sha }} }
+    with:
+      env: dev
+      tag: ${{ github.sha }}
