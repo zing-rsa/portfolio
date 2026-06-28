@@ -2,12 +2,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
-
 /**
  * Reuse a single postgres.js client across hot reloads in dev and across
  * requests in production. `max: 1` keeps the pool small — fine for a portfolio
@@ -17,12 +11,31 @@ const globalForDb = globalThis as unknown as {
   client?: ReturnType<typeof postgres>;
 };
 
-const client =
-  globalForDb.client ?? postgres(connectionString, { max: 1 });
+/**
+ * Lazily create the client on first use rather than at import time. The app is
+ * force-dynamic, so DATABASE_URL is only needed when a request actually queries
+ * — not during `next build`, which imports this module to analyze routes.
+ */
+function getClient() {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set");
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.client = client;
+  const client = globalForDb.client ?? postgres(connectionString, { max: 1 });
+  if (process.env.NODE_ENV !== "production") {
+    globalForDb.client = client;
+  }
+  return client;
 }
 
-export const db = drizzle(client, { schema });
+let dbInstance: ReturnType<typeof drizzle<typeof schema>> | undefined;
+
+export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
+  get(_target, prop, receiver) {
+    dbInstance ??= drizzle(getClient(), { schema });
+    return Reflect.get(dbInstance, prop, receiver);
+  },
+});
+
 export { schema };
