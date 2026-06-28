@@ -10,5 +10,4 @@ node_modules
 Dockerfile
 .dockerignore
 docker-compose.yml
-drizzle
 spec.md
