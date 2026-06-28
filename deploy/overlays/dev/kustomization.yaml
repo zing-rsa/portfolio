@@ -1,7 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: dev
-resources: [../../base, httproute.yaml, externalsecret.yaml, database.yaml]
+resources:
+- ../../base
+- httproute.yaml
+- externalsecret.yaml
+- database.yaml
 images:
-  - name: ghcr.io/zing-rsa/portfolio
-    newTag: latest
+- name: ghcr.io/zing-rsa/portfolio
+  newTag: 13ea930b6949e3c97472f58d8166879b509f2fad
