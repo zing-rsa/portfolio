@@ -8,4 +8,4 @@ resources:
 - database.yaml
 images:
 - name: ghcr.io/zing-rsa/portfolio
-  newTag: 2309472dd25e4510f630113266f6d03b8de4a658
+  newTag: f0c98142ccdc1252c9ecf788171045aea0bf5a36
