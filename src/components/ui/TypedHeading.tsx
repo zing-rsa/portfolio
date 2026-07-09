@@ -36,6 +36,10 @@ export function TypedHeading({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduce) {
+      // Intentional: sync to the full string once when the user prefers
+      // reduced motion. Done in an effect (not lazy init) to stay SSR-safe,
+      // since matchMedia is unavailable during server rendering.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCount(text.length);
       return;
     }

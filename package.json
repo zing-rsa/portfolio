@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -15,26 +15,30 @@
     "db:seed:demo": "bun run src/db/seed-demo.ts"
   },
   "dependencies": {
-    "next": "15.1.6",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "drizzle-orm": "0.38.4",
-    "postgres": "3.4.5",
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "drizzle-orm": "0.45.2",
+    "postgres": "3.4.9",
     "jose": "5.9.6",
     "bcryptjs": "2.4.3",
     "simple-icons": "13.21.0"
   },
   "devDependencies": {
-    "@types/node": "22.10.7",
-    "@types/react": "19.0.7",
-    "@types/react-dom": "19.0.3",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
     "@types/bcryptjs": "2.4.6",
-    "typescript": "5.7.3",
+    "typescript": "5.9.3",
     "tailwindcss": "3.4.17",
-    "postcss": "8.5.1",
-    "autoprefixer": "10.4.20",
-    "drizzle-kit": "0.30.2",
-    "eslint": "9.18.0",
-    "eslint-config-next": "15.1.6"
+    "postcss": "8.5.16",
+    "autoprefixer": "10.5.2",
+    "drizzle-kit": "0.31.10",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.10"
+  },
+  "overrides": {
+    "postcss": "8.5.16",
+    "esbuild": "0.28.1"
   }
 }

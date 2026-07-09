@@ -42,8 +42,6 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
     );
   }
 
-  let lastYear: string | null = null;
-
   return (
     <div className="relative">
       <div
@@ -54,8 +52,8 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
       <ol className="space-y-10">
         {items.map((project, i) => {
           const year = project.startDate.slice(0, 4);
-          const showYear = year !== lastYear;
-          lastYear = year;
+          const showYear =
+            i === 0 || items[i - 1].startDate.slice(0, 4) !== year;
           const isPro = project.type === "professional";
 
           return (
