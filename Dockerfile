@@ -21,12 +21,18 @@ RUN bun run build
 RUN bun build ./src/lib/db/migrate.ts --target node --outfile migrate.mjs
 
 # ---- runtime: minimal node image running the standalone server ----
-FROM node:22-slim AS runner
+FROM node:24-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+
+# The standalone server runs with `node` only — npm/npx/corepack are never
+# invoked at runtime and only add CVEs via their bundled deps (sigstore,
+# picomatch, ...). Strip them to shrink the attack surface and image size.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
+    /usr/local/lib/node_modules/corepack /usr/local/bin/corepack
 
 # Run as the non-root user shipped with the node image.
 RUN chown node:node /app
