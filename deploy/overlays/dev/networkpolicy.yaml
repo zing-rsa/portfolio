@@ -30,6 +30,14 @@ spec:
             matchLabels: { cnpg.io/cluster: pg }
       ports:
         - { protocol: TCP, port: 5432 }
+    # OTLP traces to the Alloy collector in the observability namespace.
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: observability }
+          podSelector:
+            matchLabels: { app.kubernetes.io/name: alloy }
+      ports:
+        - { protocol: TCP, port: 4318 }
     # GitHub API over HTTPS — public destinations only. Excluding cluster/private ranges
     # blocks the k8s API and every in-cluster service, the lateral path an RCE would use.
     - to:

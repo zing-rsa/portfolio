@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
+import { log } from "@/lib/log";
 
 /**
  * Reuse a single postgres.js client across hot reloads in dev and across
@@ -22,9 +23,13 @@ function getClient() {
     throw new Error("DATABASE_URL is not set");
   }
 
-  const client = globalForDb.client ?? postgres(connectionString, { max: 1 });
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.client = client;
+  let client = globalForDb.client;
+  if (!client) {
+    client = postgres(connectionString, { max: 1 });
+    log.debug("db client created", { max: 1 });
+    if (process.env.NODE_ENV !== "production") {
+      globalForDb.client = client;
+    }
   }
   return client;
 }

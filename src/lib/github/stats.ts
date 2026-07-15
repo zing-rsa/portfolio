@@ -4,6 +4,7 @@
  * totals; returns null (UI degrades) when there's no token or the request fails.
  */
 import { siteConfig } from "@/site.config";
+import { log } from "@/lib/log";
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 const REVALIDATE_SECONDS = 3600;
@@ -113,25 +114,50 @@ export async function getGithubStats(): Promise<GithubStats | null> {
   const login = siteConfig.github.username;
   if (!token || !login) return null;
 
+  const requestBody = JSON.stringify({ query: QUERY, variables: { login } });
   let json: { data?: { user?: GithubUser }; errors?: unknown };
   try {
+    const start = performance.now();
     const res = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: QUERY, variables: { login } }),
+      body: requestBody,
       next: { revalidate: REVALIDATE_SECONDS },
     });
-    if (!res.ok) return null;
+    log.debug("github stats request", {
+      status: res.status,
+      duration_ms: Math.round(performance.now() - start),
+    });
+    if (!res.ok) {
+      // 4xx responses (bad token, rate limit, unknown login) carry a diagnostic body. Dump
+      // both sides at debug; the token is in the header, not the body, so nothing secret leaks.
+      if (res.status >= 400 && res.status < 500) {
+        const responseBody = await res.text().catch(() => "<unreadable>");
+        log.debug("github stats 4xx bodies", {
+          status: res.status,
+          request_body: requestBody,
+          response_body: responseBody.slice(0, 2000),
+        });
+      }
+      log.warn("github stats request failed", { status: res.status });
+      return null;
+    }
     json = await res.json();
-  } catch {
+  } catch (err) {
+    log.warn("github stats fetch threw", {
+      error: err instanceof Error ? err.message : String(err),
+    });
     return null;
   }
 
   const user = json.data?.user;
-  if (!user) return null;
+  if (!user) {
+    log.warn("github stats: no user in response", { errors: json.errors });
+    return null;
+  }
 
   const langTotals = new Map<string, number>();
   let totalStars = 0;

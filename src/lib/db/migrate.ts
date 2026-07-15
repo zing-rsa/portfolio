@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
+import { log } from "../log";
 
 /**
  * Standalone migrator. Applies the SQL files in ./drizzle against DATABASE_URL
@@ -14,5 +15,15 @@ if (!connectionString) {
 }
 
 const client = postgres(connectionString, { max: 1 });
-await migrate(drizzle(client), { migrationsFolder: "./drizzle" });
-await client.end();
+log.info("migrations starting");
+try {
+  await migrate(drizzle(client), { migrationsFolder: "./drizzle" });
+  log.info("migrations applied");
+} catch (err) {
+  log.error("migrations failed", {
+    error: err instanceof Error ? err.message : String(err),
+  });
+  throw err;
+} finally {
+  await client.end();
+}

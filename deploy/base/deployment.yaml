@@ -5,7 +5,12 @@ spec:
   replicas: 1
   selector: { matchLabels: { app: portfolio } }
   template:
-    metadata: { labels: { app: portfolio } }
+    metadata:
+      labels: { app: portfolio }
+      # resource.opentelemetry.io/* annotations are lifted to OTel resource attributes by
+      # Alloy's k8sattributes processor, so logs carry the same service.name as traces.
+      annotations:
+        resource.opentelemetry.io/service.name: portfolio
     spec:
       imagePullSecrets: [{ name: ghcr }]
       initContainers:
@@ -23,6 +28,10 @@ spec:
           ports: [{ containerPort: 3000 }]
           envFrom:
             - secretRef: { name: portfolio-app }
+          env:
+            # OTLP traces -> Alloy (observability ns), which forwards to Tempo.
+            - { name: OTEL_EXPORTER_OTLP_ENDPOINT, value: "http://alloy.observability.svc.cluster.local:4318" }
+            - { name: OTEL_SERVICE_NAME, value: portfolio }
           resources:
             requests: { cpu: 50m, memory: 128Mi }
             limits: { memory: 384Mi }

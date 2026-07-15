@@ -15,13 +15,15 @@
     "db:seed:demo": "bun run src/db/seed-demo.ts"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
+    "@vercel/otel": "^2.1.3",
+    "bcryptjs": "2.4.3",
+    "drizzle-orm": "0.45.2",
+    "jose": "5.9.6",
     "next": "16.2.10",
+    "postgres": "3.4.9",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "drizzle-orm": "0.45.2",
-    "postgres": "3.4.9",
-    "jose": "5.9.6",
-    "bcryptjs": "2.4.3",
     "simple-icons": "13.21.0"
   },
   "devDependencies": {

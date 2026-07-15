@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "@/lib/auth/jwt";
+import { log } from "@/lib/log";
 
 /**
  * Edge middleware guarding the backoffice. Verifies the signed session cookie
@@ -17,6 +18,7 @@ export async function middleware(req: NextRequest) {
   const isLogin = pathname === "/admin/login";
 
   if (pathname.startsWith("/admin") && !isLogin && !authed) {
+    log.debug("auth redirect to login", { path: pathname });
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
     url.search = "";
@@ -32,6 +34,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/api/projects") && req.method !== "GET" && !authed) {
+    log.debug("blocked unauthenticated mutation", { path: pathname, method: req.method });
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

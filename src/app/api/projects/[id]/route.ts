@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateProject, deleteProject } from "@/lib/db/queries";
-import { requireAuth } from "@/lib/auth/session";
+import { getSession } from "@/lib/auth/session";
 import { parseProjectInput } from "@/lib/validation";
+import { log, withRequestLog } from "@/lib/log";
 
 export const runtime = "nodejs";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  if (!(await requireAuth())) {
+type Ctx = { params: Promise<{ id: string }> };
+
+export const PATCH = withRequestLog(async (req: NextRequest, { params }: Ctx) => {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -23,14 +24,13 @@ export async function PATCH(
   if (!updated) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
+  log.info("project updated", { id, actor: session.sub });
   return NextResponse.json(updated);
-}
+});
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  if (!(await requireAuth())) {
+export const DELETE = withRequestLog(async (_req: NextRequest, { params }: Ctx) => {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -39,5 +39,6 @@ export async function DELETE(
   if (!deleted) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
+  log.info("project deleted", { id, actor: session.sub });
   return NextResponse.json({ ok: true });
-}
+});

@@ -4,10 +4,11 @@ import { db } from "@/lib/db";
 import { adminUsers } from "@/lib/db/schema";
 import { verifyPassword } from "@/lib/auth/password";
 import { createSession } from "@/lib/auth/session";
+import { log, withRequestLog } from "@/lib/log";
 
 export const runtime = "nodejs";
 
-export async function POST(req: NextRequest) {
+export const POST = withRequestLog(async (req: NextRequest) => {
   const body = await req.json().catch(() => null);
   const email = typeof body?.email === "string" ? body.email.trim() : "";
   const password = typeof body?.password === "string" ? body.password : "";
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
 
   const ok = user ? await verifyPassword(password, user.passwordHash) : false;
   if (!ok) {
+    // Never log the password; reason distinguishes enumeration from bad password.
+    log.warn("login failed", { email, reason: user ? "bad_password" : "unknown_user" });
     return NextResponse.json(
       { error: "invalid credentials" },
       { status: 401 },
@@ -34,5 +37,6 @@ export async function POST(req: NextRequest) {
   }
 
   await createSession(user.email);
+  log.info("login succeeded", { email: user.email });
   return NextResponse.json({ ok: true });
-}
+});
