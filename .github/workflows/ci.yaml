@@ -15,3 +15,11 @@ jobs:
     with:
       env: dev
       tag: ${{ github.sha }}
+  deploy-prod:
+    if: github.event_name == 'release'
+    needs: build
+    permissions: { contents: write }
+    uses: zing-rsa/lab/.github/workflows/deploy.yml@main
+    with:
+      env: prod
+      tag: ${{ github.event.release.tag_name }}

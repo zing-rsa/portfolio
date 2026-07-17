@@ -1,0 +1,8 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata: { name: portfolio }
+spec:
+  parentRefs: [{ name: main, namespace: envoy-gateway-system, sectionName: apex-https }]
+  hostnames: [zingdev.xyz]
+  rules:
+    - backendRefs: [{ name: portfolio, port: 80 }]
