@@ -9,7 +9,7 @@ resources:
 - networkpolicy.yaml
 images:
 - name: ghcr.io/zing-rsa/portfolio
-  newTag: ea344fd71dfac63ef2e952fb201a76f950044639
+  newTag: 7f9efc370df92e557c9b83c20052f02f0fabbbf2
 # Single source for the environment: Alloy's k8sattributes processor reads this annotation
 # (and any resource.opentelemetry.io/* annotation) and stamps it as a resource attribute onto
 # both traces and logs, so every signal is labelled identically.
