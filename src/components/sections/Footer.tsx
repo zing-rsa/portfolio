@@ -23,7 +23,6 @@ export function Footer() {
         ) : null}
 
         <p className="mt-4 text-xs text-ink-faint">
-          <span className="text-ink-muted">$</span> {siteConfig.name} —{" "}
           built with next.js · deployed on kubernetes
         </p>
       </div>

@@ -24,7 +24,7 @@ export function Section({
       {...props}
     >
       {label ? (
-        <p className="mb-10 text-xs uppercase tracking-[0.3em] text-ink-muted">
+        <p className="mb-10 text-xs tracking-[0.3em] text-ink-muted">
           <span className="text-ink-faint">$</span> {label}
         </p>
       ) : null}

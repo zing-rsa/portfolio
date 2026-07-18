@@ -2,7 +2,7 @@
 
 export const siteConfig: SiteConfig = {
   name: "zing",
-  heading: "hello, i'm zing",
+  heading: "hey, i'm zing",
   intro: "I'm a passionate developer and outdoor activity enjoyer. I develop software in payments and corporate finance and have keen interests in web development and blockchain.",
   location: "Cape Town, South Africa",
   timezone: "SAST",
