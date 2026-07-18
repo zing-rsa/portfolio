@@ -11,7 +11,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} — portfolio`,
+  title: `${siteConfig.name} — web`,
   description: siteConfig.intro,
 };
 
