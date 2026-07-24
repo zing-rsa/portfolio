@@ -8,6 +8,7 @@ import { log } from "@/lib/log";
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 const REVALIDATE_SECONDS = 3600;
+const REQUEST_TIMEOUT_MS = 8000;
 
 export interface CalendarDay {
   date: string;
@@ -123,8 +124,14 @@ export async function getGithubStats(): Promise<GithubStats | null> {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Accept: "application/json",
+        // GitHub's API requires a User-Agent; omitting it yields intermittent 403s.
+        "User-Agent": `${login}-portfolio`,
       },
       body: requestBody,
+      // Own timeout signal so a cancelled page request (e.g. a reload while the
+      // Suspense boundary is still streaming) can't abort this fetch mid-flight.
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       next: { revalidate: REVALIDATE_SECONDS },
     });
     log.debug("github stats request", {

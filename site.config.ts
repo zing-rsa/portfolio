@@ -4,6 +4,7 @@ export const siteConfig: SiteConfig = {
   name: "zingdev",
   heading: "hey, i'm zing",
   intro: "I'm a passionate developer and outdoor activity enjoyer. I develop software in payments and corporate finance and have keen interests in web development and blockchain.",
+  metaDescription: "Check out what I've been up to - zing",
   location: "Cape Town, South Africa",
   timezone: "SAST",
   github: {
@@ -15,7 +16,7 @@ export const siteConfig: SiteConfig = {
     { key: "discord", label: "Discord", copyValue: "zing_rsa" },
     { key: "email", label: "Email", copyValue: "kritz.rob@gmail.com" },
   ],
-  footer: "Please get in touch if you'd like to chat about software.",
+  footer: "Get in touch if you'd like to chat about software.",
   adminPath: "/admin",
 };
 
@@ -30,6 +31,7 @@ export interface SiteConfig {
   name: string;
   heading: string;
   intro: string;
+  metaDescription: string;
   location: string;
   timezone: string;
   github: {

@@ -11,8 +11,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} — web`,
-  description: siteConfig.intro,
+  title: siteConfig.name,
+  description: siteConfig.metaDescription,
 };
 
 export default function RootLayout({
