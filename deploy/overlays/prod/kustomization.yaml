@@ -9,7 +9,7 @@ resources:
 - networkpolicy.yaml
 images:
 - name: ghcr.io/zing-rsa/portfolio
-  newTag: v1.0.3
+  newTag: v1.0.4
 patches:
 - patch: |-
     - op: add
