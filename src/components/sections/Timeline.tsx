@@ -13,7 +13,7 @@ export async function Timeline() {
 
   return (
     <Section label="~/projects" id="projects" className="!pb-8 lg:!pb-10">
-      <h2 className="mb-12 text-2xl font-bold sm:text-3xl">professional and personal projects</h2>
+      <h2 className="mb-6 text-2xl font-bold sm:text-3xl">professional and personal projects</h2>
       <TimelineClient initial={initial} pageSize={PAGE_SIZE} />
     </Section>
   );
