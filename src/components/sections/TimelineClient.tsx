@@ -88,26 +88,28 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
           />
 
           {width > 0 ? (
-            <svg
-              aria-hidden
-              className="pointer-events-none absolute left-0 top-0 z-0 text-ink-muted/60"
-              width={width}
-              height={layout.height}
-            >
-              {layout.placements.map((p) => {
-                const edgeX = p.isPro ? centerX - GUTTER : centerX + GUTTER;
-                const midX = p.isPro ? centerX - GUTTER / 2 : centerX + GUTTER / 2;
-                return (
-                  <polyline
-                    key={p.id}
-                    points={`${centerX},${p.dotY} ${midX},${p.dotY} ${midX},${p.anchorY} ${edgeX},${p.anchorY}`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1}
-                  />
-                );
-              })}
-            </svg>
+            <FadeIn>
+              <svg
+                aria-hidden
+                className="pointer-events-none absolute left-0 top-0 z-0 text-ink-muted/60"
+                width={width}
+                height={layout.height}
+              >
+                {layout.placements.map((p) => {
+                  const edgeX = p.isPro ? centerX - GUTTER : centerX + GUTTER;
+                  const midX = p.isPro ? centerX - GUTTER / 2 : centerX + GUTTER / 2;
+                  return (
+                    <polyline
+                      key={p.id}
+                      points={`${centerX},${p.dotY} ${midX},${p.dotY} ${midX},${p.anchorY} ${edgeX},${p.anchorY}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1}
+                    />
+                  );
+                })}
+              </svg>
+            </FadeIn>
           ) : null}
 
           {layout.placements.map(
