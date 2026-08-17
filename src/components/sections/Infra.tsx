@@ -9,21 +9,19 @@ export function Infra() {
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <h2 className="text-2xl font-bold leading-tight sm:text-3xl">
-            Interested in how I host this site?
+            Interested in infrastructure?
           </h2>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted">
-            I run all my side projects on a self managed kubernetes cluster.
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-muted">
+            This site is served by a kubernetes cluster that I host all my projects on. If you are curious, check out a diagram and demo at&nbsp;
+            <a
+              href="https://infra.zingdev.xyz"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="transition-colors text-ink"
+            >
+              infra.zingdev.xyz <Icon path={EXTERNAL_GLYPH} size={14} />
+            </a>
           </p>
-          <span className="group-hover:underline text-sm text-ink-muted">Read more at </span>
-          <a
-            href="https://infra.zingdev.xyz"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="group mt-8 inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
-          >
-            infra.zingdev.xyz
-            <Icon path={EXTERNAL_GLYPH} size={14} />
-          </a>
         </div>
 
         <div
@@ -41,6 +39,7 @@ export function Infra() {
             width={1280}
             height={720}
             className="absolute inset-x-0 top-0 h-auto w-full"
+            loading="eager"
           />
         </div>
       </div>
