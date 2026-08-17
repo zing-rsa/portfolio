@@ -1,6 +1,7 @@
 import { getGithubStats, type CalendarDay } from "@/lib/github/stats";
 import { getIconPath, getIcon } from "@/lib/icons";
-import { Section, Card, Icon, FadeIn, ScrollToEnd } from "@/components/ui";
+import { Section, Card, cardSurface, Icon, FadeIn, ScrollToEnd } from "@/components/ui";
+import { clsx } from "@/lib/utils";
 
 const LEVEL_BG = [
   "bg-ink/[0.07]",
@@ -67,7 +68,7 @@ function RepoCard({
       href={repo.url}
       target="_blank"
       rel="noreferrer noopener"
-      className="flex h-full min-w-0 flex-col gap-2 border border-ink-muted/40 bg-paper p-5 transition-colors duration-200 hover:border-ink"
+      className={clsx("flex h-full min-w-0 flex-col gap-2", cardSurface)}
     >
       <div className="flex min-w-0 items-center justify-between gap-2">
         <span className="min-w-0 truncate text-sm font-bold">

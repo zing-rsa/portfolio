@@ -1,15 +1,12 @@
 "use client";
 
 import type { Technology } from "@/lib/db/schema";
-import { Button } from "@/components/ui";
+import { Button, Input } from "@/components/ui";
 
 interface TechnologiesEditorProps {
   value: Technology[];
   onChange: (technologies: Technology[]) => void;
 }
-
-const inputClass =
-  "border border-ink-muted/50 bg-paper px-2 py-1.5 text-sm focus:border-ink focus:outline-none";
 
 /**
  * Structured editor for a project's technologies. Each row is a display name
@@ -43,17 +40,16 @@ export function TechnologiesEditor({
             key={i}
             className="grid gap-2 sm:grid-cols-[1fr_1fr_auto]"
           >
-            <input
+            <Input
               placeholder="Name (e.g. TypeScript)"
               value={t.name}
               onChange={(e) => update(i, { name: e.target.value })}
-              className={inputClass}
             />
-            <input
+            <Input
               placeholder="simple-icons slug (e.g. typescript)"
               value={t.icon ?? ""}
               onChange={(e) => update(i, { icon: e.target.value || undefined })}
-              className={`${inputClass} font-mono`}
+              className="font-mono"
             />
             <Button
               type="button"

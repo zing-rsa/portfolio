@@ -3,6 +3,7 @@
  * Wraps the pure JWT helpers in `./jwt` with the httpOnly session cookie.
  */
 import { cookies } from "next/headers";
+import { NextResponse, type NextRequest } from "next/server";
 import {
   SESSION_COOKIE,
   SESSION_MAX_AGE,
@@ -34,7 +35,24 @@ export async function getSession(): Promise<SessionPayload | null> {
   return verifySession(store.get(SESSION_COOKIE)?.value);
 }
 
-/** Convenience boolean guard for route handlers. */
-export async function requireAuth(): Promise<boolean> {
-  return (await getSession()) !== null;
+/**
+ * Wraps a route handler so it only runs with a valid session, which is passed
+ * in as the last argument; otherwise responds 401. Middleware already blocks
+ * unauthenticated mutations at the edge — this is the defence-in-depth check at
+ * the handler itself, expressed once rather than repeated per route.
+ */
+export function withAuth<C>(
+  handler: (
+    req: NextRequest,
+    ctx: C,
+    session: SessionPayload,
+  ) => Promise<Response>,
+): (req: NextRequest, ctx: C) => Promise<Response> {
+  return async (req, ctx) => {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+    return handler(req, ctx, session);
+  };
 }

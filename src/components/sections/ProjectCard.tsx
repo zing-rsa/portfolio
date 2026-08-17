@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { TimelineProject } from "@/lib/projects";
-import { Icon } from "@/components/ui";
+import { Icon, cardSurface } from "@/components/ui";
 import { clsx } from "@/lib/utils";
 import { GITHUB_GLYPH, EXTERNAL_GLYPH } from "@/components/ui/glyphs";
 
@@ -42,10 +42,7 @@ export function ProjectCard({ project }: { project: TimelineProject }) {
 
   return (
     <article
-      className={clsx(
-        "border border-ink-muted/40 bg-paper p-5 transition-colors duration-200 hover:border-ink",
-        isPro ? "lg:text-right" : "lg:text-left",
-      )}
+      className={clsx(cardSurface, isPro ? "lg:text-right" : "lg:text-left")}
     >
       <div
         className={clsx(

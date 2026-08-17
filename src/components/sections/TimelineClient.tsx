@@ -1,189 +1,36 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type { TimelineProject, TimelinePage } from "@/lib/projects";
 import { ProjectCard } from "./ProjectCard";
 import { Button, FadeIn } from "@/components/ui";
 import { clsx } from "@/lib/utils";
+import { computeLayout, GUTTER } from "./timelineLayout";
+import { useTimelineMeasure } from "./useTimelineMeasure";
 
 interface TimelineClientProps {
   initial: TimelinePage;
+  /** Projects shown initially and revealed per "load more" (also the fetch page size). */
   pageSize: number;
 }
 
-/** Projects shown before any expansion. */
-const INITIAL_VISIBLE = 6;
-/** Additional projects revealed per "load more" click. */
-const VISIBLE_STEP = 6;
-
-/** Desktop layout constants (px). */
-const TOP = 8;
-const GAP = 28; // min vertical gap between stacked cards in a column
-const ANCHOR = 32; // where a connector meets the card, measured from its top
-const YEAR_GAP = 48; // extra axis space introduced by a new year label
-const GUTTER = 40; // gap between a column's inner edge and the central axis
-const MIN_STEP = 72; // min axis spacing per project so dots never crowd
-const FALLBACK_HEIGHT = 240; // used before a card has been measured
-
-interface Placement {
-  id: string;
-  isPro: boolean;
-  top: number;
-  dotY: number;
-  anchorY: number;
-  year: string;
-  showYear: boolean;
-}
-
-interface Layout {
-  placements: Placement[];
-  height: number;
-}
-
-function computeLayout(
-  items: TimelineProject[],
-  heights: Record<string, number>,
-): Layout {
-  const n = items.length;
-  if (n === 0) return { placements: [], height: 0 };
-
-  const h = (id: string) => heights[id] ?? FALLBACK_HEIGHT;
-
-  let leftSum = 0;
-  let rightSum = 0;
-  let leftCount = 0;
-  let rightCount = 0;
-  for (const p of items) {
-    if (p.type === "professional") {
-      leftSum += h(p.id);
-      leftCount += 1;
-    } else {
-      rightSum += h(p.id);
-      rightCount += 1;
-    }
-  }
-  const leftPacked = leftCount ? leftSum + GAP * (leftCount - 1) : 0;
-  const rightPacked = rightCount ? rightSum + GAP * (rightCount - 1) : 0;
-  const contentH = Math.max(leftPacked, rightPacked);
-  const span = Math.max(contentH / n, MIN_STEP);
-
-  // Evenly spaced dots along the axis. The first card hugs the top; later new
-  // years add a gap so their label clears the preceding project.
-  const dotY: number[] = [];
-  const showYear: boolean[] = [];
-  const years: string[] = [];
-  let yearShift = 0;
-  for (let i = 0; i < n; i++) {
-    const year = items[i].startDate.slice(0, 4);
-    const newYear = i === 0 || items[i - 1].startDate.slice(0, 4) !== year;
-    if (newYear && i > 0) yearShift += YEAR_GAP;
-    years[i] = year;
-    showYear[i] = newYear;
-    dotY[i] = TOP + yearShift + i * span + ANCHOR;
-  }
-
-  // Place each card near its dot, cascading down only to avoid overlaps.
-  let leftCursor = TOP - GAP;
-  let rightCursor = TOP - GAP;
-  const placements: Placement[] = [];
-  let maxBottom = 0;
-  for (let i = 0; i < n; i++) {
-    const p = items[i];
-    const isPro = p.type === "professional";
-    const desired = dotY[i] - ANCHOR;
-    const cursor = isPro ? leftCursor : rightCursor;
-    const top = Math.max(desired, cursor + GAP);
-    if (isPro) leftCursor = top + h(p.id);
-    else rightCursor = top + h(p.id);
-    maxBottom = Math.max(maxBottom, top + h(p.id));
-
-    placements.push({
-      id: p.id,
-      isPro,
-      top,
-      dotY: dotY[i],
-      anchorY: top + ANCHOR,
-      year: years[i],
-      showYear: showYear[i],
-    });
-  }
-
-  const axisEnd = dotY[n - 1] + ANCHOR;
-  return { placements, height: Math.max(maxBottom, axisEnd) + TOP };
-}
-
-/** Central-axis timeline that reveals projects in chunks, fetching from `/api/projects` as needed. */
+/** Central-axis timeline that reveals projects a page at a time, fetching from `/api/projects` as needed. */
 export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
   const [items, setItems] = useState<TimelineProject[]>(initial.items);
   const [hasMore, setHasMore] = useState(initial.hasMore);
-  const [visible, setVisible] = useState(INITIAL_VISIBLE);
+  const [visible, setVisible] = useState(pageSize);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [width, setWidth] = useState(0);
-  const [heights, setHeights] = useState<Record<string, number>>({});
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardEls = useRef<Map<string, HTMLElement>>(new Map());
 
   const visibleItems = items.slice(0, visible);
   const canReveal = visible < items.length || hasMore;
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setIsDesktop(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  const measure = useCallback(() => {
-    setHeights((prev) => {
-      let changed = false;
-      const next: Record<string, number> = { ...prev };
-      cardEls.current.forEach((el, id) => {
-        const h = el.offsetHeight;
-        if (h && next[id] !== h) {
-          next[id] = h;
-          changed = true;
-        }
-      });
-      return changed ? next : prev;
-    });
-  }, []);
-
-  useLayoutEffect(() => {
-    if (isDesktop) measure();
-  }, [isDesktop, visibleItems.length, width, measure]);
-
-  useEffect(() => {
-    if (!isDesktop) return;
-    const ro = new ResizeObserver(() => measure());
-    cardEls.current.forEach((el) => ro.observe(el));
-    return () => ro.disconnect();
-  }, [isDesktop, visibleItems.length, measure]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) =>
-      setWidth(entry.contentRect.width),
-    );
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [isDesktop]);
-
-  const registerCard = useCallback(
-    (id: string) => (el: HTMLElement | null) => {
-      if (el) cardEls.current.set(id, el);
-      else cardEls.current.delete(id);
-    },
-    [],
+  const { width, heights, containerRef, registerCard } = useTimelineMeasure(
+    visibleItems.length,
   );
 
   async function loadMore() {
-    const next = visible + VISIBLE_STEP;
+    const next = visible + pageSize;
 
     if (next > items.length && hasMore) {
       setLoading(true);
@@ -351,7 +198,7 @@ export function TimelineClient({ initial, pageSize }: TimelineClientProps) {
         </div>
       </div>
 
-      <div className={clsx("mt-12 flex flex-col items-center gap-3", "lg:ml-0")}>
+      <div className="mt-12 flex flex-col items-center gap-3">
         {error ? <p className="text-sm text-ink-muted">{error}</p> : null}
         {canReveal ? (
           <Button

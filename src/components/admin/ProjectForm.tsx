@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Project, Technology } from "@/lib/db/schema";
-import { Button } from "@/components/ui";
+import { Button, Field, Input, inputClass } from "@/components/ui";
 import { TechnologiesEditor } from "./TechnologiesEditor";
 
 interface ProjectFormProps {
@@ -12,9 +12,6 @@ interface ProjectFormProps {
 }
 
 type ProjectType = "professional" | "personal";
-
-const inputClass =
-  "border border-ink-muted/50 bg-paper px-3 py-2 text-sm focus:border-ink focus:outline-none";
 
 /**
  * Create/edit form for a project. One form handles both timeline variants;
@@ -93,8 +90,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
       </h3>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">type</span>
+        <Field label="type">
           <select
             value={type}
             onChange={(e) => setType(e.target.value as ProjectType)}
@@ -103,21 +99,18 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
             <option value="professional">professional</option>
             <option value="personal">personal</option>
           </select>
-        </label>
+        </Field>
 
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">title</span>
-          <input
+        <Field label="title">
+          <Input
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className={inputClass}
           />
-        </label>
+        </Field>
       </div>
 
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-ink-muted">description</span>
+      <Field label="description">
         <textarea
           required
           rows={3}
@@ -125,83 +118,67 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
           onChange={(e) => setDescription(e.target.value)}
           className={inputClass}
         />
-      </label>
+      </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">start date (YYYY-MM-DD)</span>
-          <input
+        <Field label="start date (YYYY-MM-DD)">
+          <Input
             required
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className={inputClass}
           />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">end date (blank = present)</span>
-          <input
+        </Field>
+        <Field label="end date (blank = present)">
+          <Input
             type="date"
             value={endDate ?? ""}
             onChange={(e) => setEndDate(e.target.value)}
-            className={inputClass}
           />
-        </label>
+        </Field>
       </div>
 
       {isPro ? (
         <div className="grid gap-4 sm:grid-cols-3">
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">organization</span>
-            <input
+          <Field label="organization">
+            <Input
               value={organization ?? ""}
               onChange={(e) => setOrganization(e.target.value)}
-              className={inputClass}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">org icon slug</span>
-            <input
+          </Field>
+          <Field label="org icon slug">
+            <Input
               value={organizationIcon ?? ""}
               onChange={(e) => setOrganizationIcon(e.target.value)}
-              className={inputClass}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">role</span>
-            <input
+          </Field>
+          <Field label="role">
+            <Input
               value={role ?? ""}
               onChange={(e) => setRole(e.target.value)}
-              className={inputClass}
             />
-          </label>
+          </Field>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-3">
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">image url</span>
-            <input
+          <Field label="image url">
+            <Input
               value={imageUrl ?? ""}
               onChange={(e) => setImageUrl(e.target.value)}
-              className={inputClass}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">live link</span>
-            <input
+          </Field>
+          <Field label="live link">
+            <Input
               value={link ?? ""}
               onChange={(e) => setLink(e.target.value)}
-              className={inputClass}
             />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-ink-muted">github link</span>
-            <input
+          </Field>
+          <Field label="github link">
+            <Input
               value={githubLink ?? ""}
               onChange={(e) => setGithubLink(e.target.value)}
-              className={inputClass}
             />
-          </label>
+          </Field>
         </div>
       )}
 

@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui";
+import { Button, Field, Input } from "@/components/ui";
 
 export default function LoginPage() {
   return (
@@ -52,29 +52,25 @@ function LoginForm() {
       <h1 className="mb-8 text-2xl font-bold">backoffice</h1>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">email</span>
-          <input
+        <Field label="email">
+          <Input
             type="email"
             required
             autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-ink-muted/50 bg-paper px-3 py-2 focus:border-ink focus:outline-none"
           />
-        </label>
+        </Field>
 
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-ink-muted">password</span>
-          <input
+        <Field label="password">
+          <Input
             type="password"
             required
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-ink-muted/50 bg-paper px-3 py-2 focus:border-ink focus:outline-none"
           />
-        </label>
+        </Field>
 
         {error ? <p className="text-sm text-ink">⚠ {error}</p> : null}
 

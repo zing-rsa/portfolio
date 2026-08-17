@@ -1,5 +1,6 @@
 export { Button } from "./Button";
-export { Card } from "./Card";
+export { Card, cardSurface } from "./Card";
+export { Input, Field, inputClass } from "./Input";
 export { Section } from "./Section";
 export { Icon } from "./Icon";
 export { TypedHeading } from "./TypedHeading";
