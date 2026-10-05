@@ -12,7 +12,7 @@ import {
   type ResolvedIcon,
 } from "@/lib/icons";
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 6;
 
 export interface TimelineProject {
   id: string;

@@ -20,3 +20,16 @@ export function encodeBase64(value: string): string {
 export function decodeBase64(value: string): string {
   return atob(value);
 }
+
+/**
+ * Compact, lowercase number formatting for small badges, e.g. 10, 100, 1k,
+ * 100k, 1.2m. Keeps one fraction digit so counts stay legible as they grow.
+ */
+export function formatCompact(value: number): string {
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  })
+    .format(value)
+    .toLowerCase();
+}

@@ -5,6 +5,7 @@ import {
   timestamp,
   date,
   jsonb,
+  integer,
   pgEnum,
 } from "drizzle-orm/pg-core";
 
@@ -61,6 +62,19 @@ export const adminUsers = pgTable("admin_users", {
     .defaultNow(),
 });
 
+/**
+ * Generic named integer counters (one row per key), e.g. the "leave some love"
+ * tally. Keyed by a stable string so new counters need no schema change.
+ */
+export const siteCounters = pgTable("site_counters", {
+  key: text("key").primaryKey(),
+  count: integer("count").notNull().default(0),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type AdminUser = typeof adminUsers.$inferSelect;
+export type SiteCounter = typeof siteCounters.$inferSelect;

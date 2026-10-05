@@ -44,7 +44,6 @@ export function TypedHeading({
       return;
     }
 
-    setCount(0);
     let i = 0;
     let timer: number;
 
@@ -56,7 +55,9 @@ export function TypedHeading({
       timer = window.setTimeout(step, delay);
     };
 
-    timer = window.setTimeout(step, speed);
+    // Type the first character immediately so typing starts the instant the
+    // component hydrates — no leading `speed`-length pause.
+    step();
     return () => window.clearTimeout(timer);
   }, [text, speed, pauseAfter, pauseMs]);
 

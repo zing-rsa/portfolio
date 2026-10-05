@@ -33,9 +33,16 @@ const config: Config = {
           "0%, 49%": { opacity: "1" },
           "50%, 100%": { opacity: "0" },
         },
+        heartpop: {
+          "0%": { transform: "scale(1)" },
+          "30%": { transform: "scale(1.45)" },
+          "60%": { transform: "scale(0.9)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         blink: "blink 1s step-end infinite",
+        heartpop: "heartpop 400ms ease-in-out",
       },
       maxWidth: {
         content: "72rem",

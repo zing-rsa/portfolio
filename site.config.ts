@@ -9,6 +9,7 @@ export const siteConfig: SiteConfig = {
   timezone: "SAST",
   github: {
     username: "zing-rsa",
+    repo: "portfolio",
   },
   socials: [
     { key: "github", label: "GitHub", href: "https://github.com/zing-rsa" },
@@ -36,6 +37,8 @@ export interface SiteConfig {
   timezone: string;
   github: {
     username: string;
+    /** Repo (owner assumed to be `username`) used for the "star" link + count. */
+    repo: string;
   };
   socials: Social[];
   footer: string;
