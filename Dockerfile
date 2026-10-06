@@ -24,32 +24,30 @@ RUN node ./node_modules/.bin/next build
 # so the slim runtime can run migrations without drizzle-kit or dev node_modules.
 RUN bun build ./src/lib/db/migrate.ts --target node --outfile migrate.mjs
 
-# ---- runtime: minimal node image running the standalone server ----
-FROM node:24-slim AS runner
+# ---- runtime: distroless image running the standalone server ----
+# Distroless ships only glibc + node — no apt, shell, npm or perl — so the
+# recurring Debian userland CVEs (perl-base, libpcre2, ...) simply aren't
+# present, and the image is far smaller than node:*-slim.
+FROM gcr.io/distroless/nodejs24-debian12 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# The standalone server runs with `node` only — npm/npx/corepack are never
-# invoked at runtime and only add CVEs via their bundled deps (sigstore,
-# picomatch, ...). Strip them to shrink the attack surface and image size.
-RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
-    /usr/local/lib/node_modules/corepack /usr/local/bin/corepack
-
-# Run as the non-root user shipped with the node image.
-RUN chown node:node /app
-USER node
+# Run as the non-root user shipped with distroless (uid 65532).
+USER nonroot
 
 # Standalone trace output + static assets + public dir.
-COPY --from=build --chown=node:node /app/.next/standalone ./
-COPY --from=build --chown=node:node /app/.next/static ./.next/static
-COPY --from=build --chown=node:node /app/public ./public
+COPY --from=build --chown=nonroot:nonroot /app/.next/standalone ./
+COPY --from=build --chown=nonroot:nonroot /app/.next/static ./.next/static
+COPY --from=build --chown=nonroot:nonroot /app/public ./public
 
 # DB migrator bundle + SQL files, run by the migrate initContainer before the app starts.
-COPY --from=build --chown=node:node /app/migrate.mjs ./migrate.mjs
-COPY --from=build --chown=node:node /app/drizzle ./drizzle
+COPY --from=build --chown=nonroot:nonroot /app/migrate.mjs ./migrate.mjs
+COPY --from=build --chown=nonroot:nonroot /app/drizzle ./drizzle
 
 EXPOSE 3000
-CMD ["node", "server.js"]
+# The distroless nodejs image sets ENTRYPOINT ["/nodejs/bin/node"], so CMD is
+# just the script to run.
+CMD ["server.js"]
