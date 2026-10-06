@@ -1,8 +1,7 @@
-# my portfolio project
+# my portfolio site
 
-A one-page, terminal-flavoured portfolio site with a small backoffice
-CMS. Built with **Next.js** (App Router) + **Bun**, **Tailwind**, **Drizzle ORM**
-over **Postgres**, and packaged for **Kubernetes**.
+A one page scrollable portfolio site with some information about my projects, a link to my lab demo, and a small backoffice
+CMS. Built with next and bun, tailwind, drizzle ORM over Postgres, and packaged for K8s.
 
 ## configuration
 
@@ -34,29 +33,3 @@ bun run db:push`     # Push schema directly (dev only)
 bun run db:seed`     # Seed admin user + sample projects
 bun run db:studio`   # Open Drizzle Studio
 ```
-
-## production / k8s
-TBD
-
-<!-- 
-
-The image is self-contained (Next standalone output) and configured entirely via
-environment variables.
-
-```bash
-docker build -t portfolio:latest .
-docker run -p 3000:3000 --env-file .env.local portfolio:latest
-```
-
-Deployment notes:
-
-- Supply env via a `Secret` (`DATABASE_URL`, `GITHUB_TOKEN`, `SESSION_SECRET`,
-  `ADMIN_*`) and mount as environment variables.
-- **Probes**: point liveness/readiness at `GET /api/health` (returns 200).
-- **Migrations**: run `bunx drizzle-kit migrate` as a pre-deploy CI step or a
-  one-shot `Job`/`initContainer` built from the `build` stage of the Dockerfile
-  (the lean runtime image intentionally omits `drizzle-kit`). The runtime image
-  never migrates on its own.
-- The app is `force-dynamic`: CMS edits appear immediately, and no database is
-  required at build time.
--->
