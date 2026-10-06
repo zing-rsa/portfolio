@@ -16,8 +16,7 @@ spec:
       initContainers:
         - name: migrate
           image: ghcr.io/zing-rsa/portfolio
-          # distroless has no shell and `node` is not on PATH; call it directly.
-          command: ["/nodejs/bin/node", "migrate.mjs"]
+          command: ["node", "migrate.mjs"]
           envFrom:
             - secretRef: { name: portfolio-app }
           resources:
