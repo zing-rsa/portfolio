@@ -6,15 +6,19 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-# ---- build: compile Next.js with bun, emit standalone output ----
-FROM oven/bun:1.3.10 AS build
+# ---- build: compile Next.js with Node, emit standalone output ----
+# Next 16 builds with Turbopack, whose compiled prod runtime can't be loaded by
+# Bun's module loader — so `next build` must run under Node. We build on the
+# Node image and copy in the Bun binary purely to bundle the migrator below.
+FROM node:24-slim AS build
 WORKDIR /app
+COPY --from=oven/bun:1.3.10 /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # DATABASE_URL is not needed at build time (the app is force-dynamic), but
 # Next reads NEXT_PUBLIC_* envs here if any are added later.
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN bun run build
+RUN node ./node_modules/.bin/next build
 
 # Bundle a standalone DB migrator (drizzle-orm + postgres inlined into one file)
 # so the slim runtime can run migrations without drizzle-kit or dev node_modules.
